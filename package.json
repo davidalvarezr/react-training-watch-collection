@@ -1,0 +1,14 @@
+{
+  "name": "react-training-watch-collection",
+  "scripts": {
+    "start": "parcel serve ./src/index.html",
+    "build": "parcel build ./src/index.html"
+  },
+  "dependencies": {
+    "react": "^16.13.1",
+    "react-dom": "16.13.1"
+  },
+  "devDependencies": {
+    "parcel": "next"
+  }
+}
