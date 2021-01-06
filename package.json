@@ -5,11 +5,15 @@
     "build": "parcel build ./src/index.html"
   },
   "dependencies": {
+    "@types/node": "^14.14.20",
+    "@types/react": "^17.0.0",
+    "@types/react-dom": "^17.0.0",
     "react": "^16.13.1",
     "react-dom": "16.13.1",
     "react-router-dom": "^5.2.0"
   },
   "devDependencies": {
-    "parcel": "next"
+    "parcel": "next",
+    "typescript": "^4.1.3"
   }
 }
