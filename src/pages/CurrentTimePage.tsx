@@ -1,6 +1,21 @@
 import React from 'react'
 import CurrentTime from "~/src/components/CurrentTime";
+import {PageHeader} from "antd";
 
-export default function(props: any) {
-    return (<span>Current time: <CurrentTime /></span>)
+function CurrentTimePage() {
+    return (
+        <div>
+            <PageHeader
+                className="site-page-header"
+                onBack={() => null}
+                title="Current time"
+                subTitle="(in Switzerland)"
+                backIcon={false}
+            />
+            <p>The current time in Switzerland is <CurrentTime /></p>
+        </div>
+
+    )
 }
+
+export default CurrentTimePage
