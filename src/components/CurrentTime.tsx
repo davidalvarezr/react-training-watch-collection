@@ -21,7 +21,7 @@ function CurrentTime() {
 }
 
 function buildTime(): string {
-    const date = new Date()
+    const date: Date = new Date()
     return `${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`
 }
 
