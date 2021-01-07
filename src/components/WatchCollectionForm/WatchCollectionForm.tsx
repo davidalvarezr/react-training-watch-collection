@@ -1,68 +1,104 @@
-import { Form, Input, Button } from 'antd'
-import React from "react"
-import rules from "~/src/components/WatchCollectionForm/rules"
+import React, {useState} from "react"
+import {WatchItem} from "~/src/types/WatchItem";
 
-const layout = {
-    labelCol: { span: 8 },
-    wrapperCol: { span: 8 },
-};
-const tailLayout = {
-    wrapperCol: { offset: 8, span: 8 },
-};
+const initialFormState: WatchItem = {
+    brand: '',
+    model: '',
+    description: '',
+    priceBought: '',
+}
 
 function WatchCollectionForm(props: PropsType) {
     const {mode} = props
 
-    function onFinish(values: any) {
-        console.log('Success:', values)
+    const [state, setState] = useState(initialFormState)
+
+    function handleChange(key: keyof typeof initialFormState, value: string): void {
+        setState({
+            ...state,
+            ...{[key]: value}
+        })
     }
 
-    function onFinishFailed(errorInfo: any) {
-        console.log('Failed:', errorInfo)
+
+
+    function addWatch() {
+        console.log("Adding this watch to the collection: ", state)
+
+        let watchList: WatchItem[] = JSON.parse(localStorage.getItem('watch-list') ?? '[]')
+        watchList = [state, ...watchList]
+        localStorage.setItem('watch-list', JSON.stringify(watchList))
+
+        setState(initialFormState)
     }
 
     return (
-        <Form
-            {...layout}
-            name="basic"
-            onFinish={onFinish}
-            onFinishFailed={onFinishFailed}
-        >
+        <div className="watch-collection-form">
+            <h1>Add a watch</h1>
+            <br/>
 
-            <Form.Item
-                label="Brand"
-                name="brand"
-                rules={rules.brand}
+            <label>
+                Brand
+                <input
+                    type="text"
+                    value={state.brand}
+                    onChange={(evt) => handleChange("brand", evt.target.value)}
+                />
+            </label>
+            <br/>
+
+            <label>
+                Model
+                <input
+                    type="text"
+                    value={state.model}
+                    onChange={(evt) => handleChange("model", evt.target.value)}
+                />
+            </label>
+            <br/>
+
+            <label>
+                Description
+                <input
+                    type="text"
+                    value={state.description}
+                    onChange={(evt) => handleChange("description", evt.target.value)}
+                />
+            </label>
+            <br/>
+
+            <label>
+                Price bought
+                <input
+                    type="number"
+                    value={state.priceBought}
+                    onChange={(evt) => handleChange("priceBought", evt.target.value)}
+                />
+            </label>
+            <br/>
+
+            {/*<label>*/}
+            {/*    Image*/}
+            {/*    <input*/}
+            {/*        type="file"*/}
+            {/*        onChange={handleFileInput}*/}
+            {/*    />*/}
+            {/*</label>*/}
+            {/*<br/>*/}
+
+            <br/>
+            <br/>
+            <button
+                onClick={() => addWatch()}
             >
-                <Input />
-            </Form.Item>
+                Submit
+            </button>
 
-            <Form.Item
-                label="Model"
-                name="model"
-                rules={rules.model}
-            >
-                <Input />
-            </Form.Item>
+        </div>
 
-            <Form.Item
-            label="Description"
-            name="description"
-            >
-                <Input.TextArea rows={4} />
-            </Form.Item>
-
-            <Form.Item {...tailLayout}>
-                <Button type="primary" htmlType="submit">
-                    Submit
-                </Button>
-            </Form.Item>
-
-        </Form>
     )
 
 }
-
 
 interface PropsType {
     mode: 'add' | 'edit'
