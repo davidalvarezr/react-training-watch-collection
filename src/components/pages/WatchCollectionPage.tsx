@@ -6,17 +6,20 @@ import {
     useParams,
     useRouteMatch
 } from "react-router-dom"
-import {Button} from "antd"
+import {Button, Space} from "antd"
 import AddWatchPage from "~/src/components/pages/AddWatchPage";
-import {WATCH_LIST} from "~/src/const/localStorageLabels";
+import WatchList from "~/src/components/blocks/WatchList";
+import WatchService from "~/src/services/WatchService";
 
 function WatchCollectionPage() {
     let {path, url} = useRouteMatch()
 
+    const watches = WatchService.getWatchList()
+
     function clearList() {
         console.log('in clear list')
         if (confirm("Do you really want to clear your list of watches ?")) {
-            localStorage.removeItem(WATCH_LIST)
+            WatchService.clearList()
         }
     }
 
@@ -24,12 +27,22 @@ function WatchCollectionPage() {
         <Switch>
 
             <Route exact path={url}>
-                <Button type="primary">
-                    <Link to={`${url}/add`}>Add a watch</Link>
-                </Button>
-                <Button type="primary" danger onClick={clearList}>
-                    Clear the list
-                </Button>
+
+                <Space>
+                    <Button type="primary">
+                        <Link to={`${url}/add`}>Add a watch</Link>
+                    </Button>
+                    <Button type="primary" danger onClick={clearList}>
+                        Clear the list
+                    </Button>
+                </Space>
+
+                <div style={{height: '10px'}} />
+
+                <div>
+                    <WatchList watches={watches} />
+                </div>
+
             </Route>
 
             <Route exact path={`${url}/add`}>

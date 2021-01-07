@@ -1,9 +1,9 @@
 import React, {useState} from "react"
-import {WatchItem} from "~/src/types/WatchItem";
-import { v4 as uuidv4 } from 'uuid';
-import {WATCH_LIST} from "~/src/const/localStorageLabels";
+import {TWatchItem} from "~/src/components/blocks/WatchItem/TWatchItem";
+import { useHistory } from "react-router-dom"
+import WatchService from "~/src/services/WatchService";
 
-const initialFormState: WatchItem = {
+const initialFormState: TWatchItem = {
     uuid: null,
     brand: '',
     model: '',
@@ -13,6 +13,8 @@ const initialFormState: WatchItem = {
 
 function WatchForm(props: PropsType) {
     const {mode} = props
+
+    const history = useHistory()
 
     const [state, setState] = useState(initialFormState)
 
@@ -25,12 +27,9 @@ function WatchForm(props: PropsType) {
 
     function addWatch() {
         console.log("Adding this watch to the collection: ", state)
-        let watchList: WatchItem[] = JSON.parse(localStorage.getItem('watch-list') ?? '[]')
-
-        watchList = [{...state, uuid: uuidv4()}, ...watchList]
-        localStorage.setItem(WATCH_LIST, JSON.stringify(watchList))
-
+        WatchService.addWatch(state)
         setState(initialFormState)
+        history.push('/watch-collection')
     }
 
     return (
