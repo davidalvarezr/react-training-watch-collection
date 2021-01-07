@@ -1,14 +1,17 @@
 import React, {useState} from "react"
 import {WatchItem} from "~/src/types/WatchItem";
+import { v4 as uuidv4 } from 'uuid';
+import {WATCH_LIST} from "~/src/const/localStorageLabels";
 
 const initialFormState: WatchItem = {
+    uuid: null,
     brand: '',
     model: '',
     description: '',
     priceBought: '',
 }
 
-function WatchCollectionForm(props: PropsType) {
+function WatchForm(props: PropsType) {
     const {mode} = props
 
     const [state, setState] = useState(initialFormState)
@@ -20,14 +23,12 @@ function WatchCollectionForm(props: PropsType) {
         })
     }
 
-
-
     function addWatch() {
         console.log("Adding this watch to the collection: ", state)
-
         let watchList: WatchItem[] = JSON.parse(localStorage.getItem('watch-list') ?? '[]')
-        watchList = [state, ...watchList]
-        localStorage.setItem('watch-list', JSON.stringify(watchList))
+
+        watchList = [{...state, uuid: uuidv4()}, ...watchList]
+        localStorage.setItem(WATCH_LIST, JSON.stringify(watchList))
 
         setState(initialFormState)
     }
@@ -105,4 +106,4 @@ interface PropsType {
 }
 
 
-export default WatchCollectionForm
+export default WatchForm

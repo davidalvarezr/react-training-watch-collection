@@ -1,10 +1,10 @@
-import WatchCollectionForm from "~/src/components/WatchCollectionForm/WatchCollectionForm";
+import WatchForm from "~/src/components/WatchCollectionForm/WatchForm";
 import React from "react";
 
 function AddWatchPage() {
 
     return (
-        <WatchCollectionForm mode={"add"}/>
+        <WatchForm mode={"add"}/>
     )
 }
 
