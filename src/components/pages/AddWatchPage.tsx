@@ -1,4 +1,4 @@
-import WatchForm from "~/src/components/WatchCollectionForm/WatchForm";
+import WatchForm from "~/src/components/blocks/WatchCollectionForm/WatchForm";
 import React from "react";
 
 function AddWatchPage() {

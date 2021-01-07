@@ -7,7 +7,7 @@ import {
     useRouteMatch
 } from "react-router-dom"
 import {Button} from "antd"
-import AddWatchPage from "~/src/pages/AddWatchPage";
+import AddWatchPage from "~/src/components/pages/AddWatchPage";
 import {WATCH_LIST} from "~/src/const/localStorageLabels";
 
 function WatchCollectionPage() {

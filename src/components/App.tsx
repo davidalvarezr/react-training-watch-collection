@@ -7,11 +7,11 @@ import {
 } from "react-router-dom"
 import {Layout, Menu} from 'antd'
 import 'antd/dist/antd.css'
-import './index.css'
+import '../index.css'
 
-import HomePage from "~/src/pages/HomePage";
-import CurrentTimePage from "~/src/pages/CurrentTimePage";
-import WatchCollectionPage from "~/src/pages/WatchCollectionPage";
+import HomePage from "~/src/components/pages/HomePage";
+import CurrentTimePage from "~/src/components/pages/CurrentTimePage";
+import WatchCollectionPage from "~/src/components/pages/WatchCollectionPage";
 
 const {Header, Content, Footer} = Layout;
 
