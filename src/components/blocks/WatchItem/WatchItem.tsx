@@ -1,26 +1,34 @@
 import React, {CSSProperties} from "react"
 import {TWatchItem} from "~/src/components/blocks/WatchItem/TWatchItem"
 import {Button, Card} from "antd"
-import {Link, useRouteMatch} from "react-router-dom"
+import {Link, useHistory} from "react-router-dom"
+import WatchService from "~/src/services/WatchService";
 
 // The display of one watch item in the list
 
 function WatchItem(props: PropsType) {
-
-    const {path, url} = useRouteMatch()
+    const history = useHistory()
     const {watch, deletable} = props
     const {brand, description, model, priceBought, uuid} = watch
 
-    console.log('path', path)
-    console.log('url', url)
+    function deleteWatch() {
+        if (!confirm("Do you really want to delete this watch ?")) return
+        WatchService.removeWatch(uuid)
+        history.push("/watch-collection")
+    }
 
     return <Card style={style}>
         <h2>{brand}</h2>
         <h3>{model}</h3>
         <p>{description}</p>
         <p>Bought at: {priceBought}</p>
+
         {!deletable && <Button>
-            <Link to={`${url}/${uuid}`}>More info</Link>
+            <Link to={`/watch-collection/${uuid}`}>More info</Link>
+        </Button>}
+
+        {deletable && <Button danger onClick={deleteWatch}>
+            Delete
         </Button>}
     </Card>
 }
@@ -29,11 +37,6 @@ function WatchItem(props: PropsType) {
 type PropsType = {
     watch: TWatchItem
     deletable?: boolean
-}
-
-const deleteButtonStyle: CSSProperties = {
-    top: 0,
-    right: 0,
 }
 
 const style: CSSProperties = {

@@ -33,10 +33,12 @@ const WatchService: IWatchService = {
         localStorage.setItem(WATCH_LIST, JSON.stringify(filteredWatchList))
     },
 
+    // TODO: get the list from the API
     downloadList(): Promise<TWatchItem[]> {
         return Promise.resolve([]);
     },
 
+    // TODO: send the list to the API
     uploadList(watches: TWatchItem[]): Promise<void> {
         return Promise.resolve();
     }
