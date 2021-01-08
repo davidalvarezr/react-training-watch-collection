@@ -66,11 +66,11 @@ function App() {
                                 <WatchCollectionPage/>
                             </Route>
 
-                            <Route path="/current-time">
+                            <Route exact path="/current-time">
                                 <CurrentTimePage/>
                             </Route>
 
-                            <Route path="/home">
+                            <Route exact path="/home">
                                 <HomePage/>
                             </Route>
 

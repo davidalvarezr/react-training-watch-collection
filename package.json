@@ -5,6 +5,7 @@
     "build": "parcel build ./src/index.html"
   },
   "dependencies": {
+    "@ant-design/icons": "^4.3.0",
     "@types/node": "^14.14.20",
     "@types/react": "^17.0.0",
     "@types/react-dom": "^17.0.0",
