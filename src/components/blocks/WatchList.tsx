@@ -1,11 +1,16 @@
 import React, {Fragment} from "react"
 import {TWatchItem} from "~/src/components/blocks/WatchItem/TWatchItem";
-import WatchItem from "~/src/components/blocks/WatchItem/WatchItem";
+import {WatchItem} from "~/src/components/blocks/WatchItem/WatchItem";
 import {Space} from "antd";
+import {Mode} from "~/src/types/Mode";
 
-function WatchList(props: PropsType) {
+export const WatchList = (props: PropsType) => {
     const watches = props.watches.map(watch =>
-        <WatchItem watch={watch} key={watch.uuid} />
+        <WatchItem
+            key={watch.uuid}
+            watch={watch}
+            mode={Mode.Show}
+        />
     )
 
     return <Fragment>
@@ -19,6 +24,3 @@ function WatchList(props: PropsType) {
 type PropsType = {
     watches: TWatchItem[]
 }
-
-
-export default WatchList

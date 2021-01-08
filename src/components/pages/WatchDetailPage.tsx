@@ -1,21 +1,20 @@
 import React from "react"
 import {useParams} from "react-router-dom"
-import WatchItem from "~/src/components/blocks/WatchItem/WatchItem";
-import WatchService from "~/src/services/WatchService";
+import {WatchItem} from "~/src/components/blocks/WatchItem/WatchItem";
+import {useWatchService} from "~/src/components/hooks/useWatchService";
+import {Mode} from "~/src/types/Mode";
 
-function WatchDetailPage(props) {
-    // Get uuid from props or route ?
+function WatchDetailPage() {
+    const watchService = useWatchService()
     const {uuid} = useParams()
-    const watch = WatchService.getWatch(uuid)
+    const watch = watchService.getWatch(uuid)
 
     return <div>
-        <WatchItem watch={watch} deletable />
+        <WatchItem
+            watch={watch}
+            mode={Mode.Edit}
+        />
     </div>
-}
-
-
-type PropsType = {
-    uuid: string
 }
 
 export default  WatchDetailPage

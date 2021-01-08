@@ -1,7 +1,7 @@
-import React, {useState} from "react"
+import React, {useEffect, useState} from "react"
 import {TWatchItem} from "~/src/components/blocks/WatchItem/TWatchItem";
 import { useHistory } from "react-router-dom"
-import WatchService from "~/src/services/WatchService";
+import {useWatchService} from "~/src/components/hooks/useWatchService";
 
 const initialFormState: TWatchItem = {
     uuid: null,
@@ -11,12 +11,17 @@ const initialFormState: TWatchItem = {
     priceBought: '',
 }
 
-function WatchForm(props: PropsType) {
-    const {mode} = props
+export const WatchForm = (props: PropsType) => {
 
+    const {watch} = props
+    const watchService = useWatchService()
     const history = useHistory()
-
     const [state, setState] = useState(initialFormState)
+
+    useEffect(() => {
+        if (!watch) return
+        setState(watch)
+    }, [])
 
     function handleChange(key: keyof typeof initialFormState, value: string): void {
         setState({
@@ -27,14 +32,19 @@ function WatchForm(props: PropsType) {
 
     function addWatch() {
         console.log("Adding this watch to the collection: ", state)
-        WatchService.addWatch(state)
+        watchService.addWatch(state)
         setState(initialFormState)
+        history.push('/watch-collection')
+    }
+
+    function updateWatch() {
+        watchService.updateWatch(watch.uuid, state)
         history.push('/watch-collection')
     }
 
     return (
         <div className="watch-collection-form">
-            <h1>Add a watch</h1>
+            <h1>{watch ? 'Edit' : 'Add'} a watch</h1>
             <br/>
 
             <label>
@@ -89,7 +99,7 @@ function WatchForm(props: PropsType) {
             <br/>
             <br/>
             <button
-                onClick={() => addWatch()}
+                onClick={() => watch ? updateWatch() : addWatch()}
             >
                 Submit
             </button>
@@ -101,8 +111,5 @@ function WatchForm(props: PropsType) {
 }
 
 interface PropsType {
-    mode: 'add' | 'edit'
+    watch?: TWatchItem,
 }
-
-
-export default WatchForm

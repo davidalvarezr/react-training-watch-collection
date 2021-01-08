@@ -1,21 +1,17 @@
 import React from 'react'
 import {
     BrowserRouter as Router,
-    Switch,
-    Route,
     Link,
 } from "react-router-dom"
 import {Layout, Menu} from 'antd'
 import 'antd/dist/antd.css'
 import '../index.css'
-
-import HomePage from "~/src/components/pages/HomePage";
-import CurrentTimePage from "~/src/components/pages/CurrentTimePage";
-import WatchCollectionPage from "~/src/components/pages/WatchCollectionPage";
+import {Routing} from "~/src/components/Routing";
+import {routes} from "~/src/config/routes";
 
 const {Header, Content, Footer} = Layout;
 
-function App() {
+export const App = () => {
     return (
         <Router>
 
@@ -55,30 +51,7 @@ function App() {
                 <Content style={{padding: '0 50px'}}>
                     <div className="site-layout-content">
 
-                        {/* A <Switch> looks through its children <Route>s and
-            renders the first one that matches the current URL. */}
-                        <Switch>
-                            <Route exact path="/">
-                                <HomePage/>
-                            </Route>
-
-                            <Route path="/watch-collection">
-                                <WatchCollectionPage/>
-                            </Route>
-
-                            <Route exact path="/current-time">
-                                <CurrentTimePage/>
-                            </Route>
-
-                            <Route exact path="/home">
-                                <HomePage/>
-                            </Route>
-
-                            <Route path="/">
-                                404 not found
-                            </Route>
-
-                        </Switch>
+                        <Routing routes={routes} />
 
                     </div>
                 </Content>
@@ -89,5 +62,3 @@ function App() {
         </Router>
     )
 }
-
-export default App

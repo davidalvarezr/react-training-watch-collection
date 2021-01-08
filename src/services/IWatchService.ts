@@ -6,7 +6,7 @@ export default interface IWatchService {
     getWatchList(): TWatchItem[]
     getWatch(uuid: string): TWatchItem
     removeWatch(uuid: string): void
-
+    updateWatch(uuid: string, watch: TWatchItem)
     uploadList(watches: TWatchItem[]): Promise<void>
     downloadList(): Promise<TWatchItem[]>
 }

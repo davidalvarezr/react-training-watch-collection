@@ -18,6 +18,14 @@ const WatchService: IWatchService = {
         localStorage.setItem(WATCH_LIST, JSON.stringify(newWatchList))
     },
 
+    updateWatch(uuid: string, watch: TWatchItem) {
+        const watchList = getWatchList()
+        const updatedWatchList = watchList.map(
+            aWatch => aWatch.uuid === uuid ? ({...watch, uuid: uuid}) : aWatch
+        )
+        localStorage.setItem(WATCH_LIST, JSON.stringify(updatedWatchList))
+    },
+
     clearList() {
         localStorage.removeItem(WATCH_LIST)
     },

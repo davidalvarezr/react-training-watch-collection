@@ -1,7 +1,7 @@
 import React from 'react'
 import {PageHeader} from "antd";
 
-function HomePage() {
+export const HomePage = () => {
     return (
         <div>
             <PageHeader
@@ -22,5 +22,3 @@ function HomePage() {
 
     )
 }
-
-export default HomePage
