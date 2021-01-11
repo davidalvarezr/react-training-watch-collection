@@ -1,4 +1,4 @@
-import WatchService from "~/src/services/WatchService";
+import {WatchService} from "~/src/services/WatchService";
 import IWatchService from "~/src/services/IWatchService";
 
 export const useWatchService = (): IWatchService => {

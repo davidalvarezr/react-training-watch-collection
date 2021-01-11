@@ -7,7 +7,7 @@ function getWatchList(): TWatchItem[] {
     return JSON.parse(localStorage.getItem(WATCH_LIST) ?? '[]')
 }
 
-const WatchService: IWatchService = {
+export const WatchService: IWatchService = {
     getWatchList(): TWatchItem[] {
         return getWatchList()
     },
@@ -51,5 +51,3 @@ const WatchService: IWatchService = {
         return Promise.resolve();
     }
 }
-
-export default WatchService
