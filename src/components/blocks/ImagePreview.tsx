@@ -1,30 +1,40 @@
 import React, {CSSProperties} from "react"
+import {useFileService} from "~/src/components/hooks/useFileService";
 
 type PropTypes = {
     file?: File
+    style?: CSSProperties
+    withTextIfNoImage?: boolean
+    withLabel?: boolean
 }
 
-const style: CSSProperties = {
+const defaultProps:PropTypes = {
+    withTextIfNoImage: false,
+    withLabel: false,
+}
+
+const baseStyle: CSSProperties = {
     width: '50vh',
     maxWidth: '100%',
 }
 
 
 export const ImagePreview = (props: PropTypes) => {
-    const {file} = props;
+    const {file, style, withTextIfNoImage, withLabel} = {...defaultProps, ...props};
+    const finalStyle = {...baseStyle, ...style}
+    const fileService = useFileService()
 
     if (!file) {
-        return (
-            <div>No image given</div>
-        )
+        return withTextIfNoImage ? (<div>No image given</div>) : null
     }
 
-    const fileUrl = URL.createObjectURL(file)
+    const fileUrl = fileService.fileUrl(file)
+
 
     return (
         <div>
-            <p>Image preview:</p>
-            <img src={fileUrl} style={style} alt="No image given" />
+            {withLabel && <p>Image preview:</p>}
+            <img src={fileUrl} style={finalStyle} alt="No image given" />
         </div>
     )
 

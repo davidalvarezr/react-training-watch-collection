@@ -2,8 +2,9 @@ import {IFileService} from "~/src/services/IFileService";
 
 export const FileService: IFileService = {
 
-    // https://stackoverflow.com/questions/36280818/how-to-convert-file-to-base64-in-javascript/57272491#57272491
     toBase64: (file) => new Promise((resolve, reject) => {
+        if ([null, undefined].includes(file)) return null
+
         const reader = new FileReader();
         reader.readAsDataURL(file);
 
@@ -17,9 +18,8 @@ export const FileService: IFileService = {
         reader.onerror = error => reject(error);
     }),
 
-    // https://stackoverflow.com/questions/35940290/how-to-convert-base64-string-to-javascript-file-object-like-as-from-file-input-f
-    dataUrlToFile: (dataurl, filename) => {
-        if (dataurl === null) return null
+    dataUrlToFileObject: (dataurl, filename) => {
+        if ([null, undefined].includes(dataurl)) return null
 
         let arr = dataurl.split(','),
             mime = arr[0].match(/:(.*?);/)[1],
@@ -33,9 +33,13 @@ export const FileService: IFileService = {
         }
         const t1 = Date.now()
 
-        console.log('Loading of file from base64 to file took ', (t1-t0)/1000)
+        console.log('Loading of file from base64 to file took ', (t1-t0)/1000, ' s')
 
         return new File([u8arr], filename, {type: mime});
+    },
+
+    fileUrl(file: File): string {
+        return URL.createObjectURL(file)
     }
 
 }

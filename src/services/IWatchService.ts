@@ -1,4 +1,4 @@
-import {TWatchItem} from "~/src/components/blocks/WatchItem/TWatchItem";
+import {TWatchItem} from "~/src/types/TWatchItem";
 
 export default interface IWatchService {
     addWatch(watch: TWatchItem)

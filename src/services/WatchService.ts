@@ -1,5 +1,5 @@
 import IWatchService from "~/src/services/IWatchService";
-import {TWatchItem} from "~/src/components/blocks/WatchItem/TWatchItem";
+import {TWatchItem} from "~/src/types/TWatchItem";
 import {WATCH_LIST} from "~/src/const/localStorageLabels";
 import { v4 as uuidv4 } from 'uuid';
 

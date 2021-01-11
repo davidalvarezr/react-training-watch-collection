@@ -1,6 +1,6 @@
 import React, {Fragment} from "react"
-import {TWatchItem} from "~/src/components/blocks/WatchItem/TWatchItem";
-import {WatchItem} from "~/src/components/blocks/WatchItem/WatchItem";
+import {TWatchItem} from "~/src/types/TWatchItem";
+import {WatchItem} from "~/src/components/blocks/WatchItem";
 import {Space} from "antd";
 import {Mode} from "~/src/types/Mode";
 
