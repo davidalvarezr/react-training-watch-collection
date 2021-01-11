@@ -1,4 +1,8 @@
-import {CURRENT_TIME, WATCH_COLLECTION} from "~/src/const/routeNames";
+import {
+    CURRENT_TIME,
+    WATCH_COLLECTION,
+    SETTINGS
+} from "~/src/const/routeNames";
 
 export const links = {
     home: () => '/',
@@ -9,4 +13,6 @@ export const links = {
     watchEdit: (uuid: string = ':uuid') => `/${WATCH_COLLECTION}/${uuid}/edit`,
 
     currentTime: () => `/${CURRENT_TIME}`,
+
+    settings: () => `/${SETTINGS}`,
 }

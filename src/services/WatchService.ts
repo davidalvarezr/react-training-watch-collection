@@ -2,13 +2,17 @@ import IWatchService from "~/src/services/IWatchService";
 import {TWatchItem} from "~/src/types/TWatchItem";
 import {WATCH_LIST} from "~/src/const/localStorageLabels";
 import { v4 as uuidv4 } from 'uuid';
+import {Dropbox, files, Error, DropboxResponse} from "dropbox";
+import {dropbox as dropboxConfig} from "~/src/config/dropbox";
 
 function getWatchList(): TWatchItem[] {
     return JSON.parse(localStorage.getItem(WATCH_LIST) ?? '[]')
 }
 
+const dbx = new Dropbox({accessToken: dropboxConfig.ACCESS_TOKEN})
 
 export const WatchService: IWatchService = {
+
     getWatchList: (): TWatchItem[] => {
         return getWatchList()
     },
@@ -48,7 +52,15 @@ export const WatchService: IWatchService = {
     },
 
     // TODO: send the list to the API
-    uploadList(watches: TWatchItem[]): Promise<void> {
-        return Promise.resolve();
+    uploadList(watches: TWatchItem[]): Promise<DropboxResponse<files.FileMetadata>> {
+        return new Promise(async(resolve, reject) => {
+            try {
+                const blob = new Blob([JSON.stringify(watches)], {type: "octet/stream"})
+                const dbxUploadResponse = await dbx.filesUpload({path: '/test.json', contents: blob})
+                resolve(dbxUploadResponse)
+            } catch (err: any) {
+                reject(err)
+            }
+        })
     }
 }
