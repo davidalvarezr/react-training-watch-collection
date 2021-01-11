@@ -4,4 +4,5 @@ export type TWatchItem = {
     model: string,
     description: string,
     priceBought: string,
+    image: string,
 }

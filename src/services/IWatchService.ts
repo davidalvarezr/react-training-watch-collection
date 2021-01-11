@@ -1,11 +1,11 @@
 import {TWatchItem} from "~/src/components/blocks/WatchItem/TWatchItem";
 
 export default interface IWatchService {
-    addWatch(watch: TWatchItem): void
-    clearList(): void
+    addWatch(watch: TWatchItem)
+    clearList()
     getWatchList(): TWatchItem[]
     getWatch(uuid: string): TWatchItem
-    removeWatch(uuid: string): void
+    removeWatch(uuid: string)
     updateWatch(uuid: string, watch: TWatchItem)
     uploadList(watches: TWatchItem[]): Promise<void>
     downloadList(): Promise<TWatchItem[]>

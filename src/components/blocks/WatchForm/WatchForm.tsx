@@ -1,7 +1,16 @@
-import React, {useEffect, useState} from "react"
+import React, {useEffect, useMemo, useState} from "react"
 import {TWatchItem} from "~/src/components/blocks/WatchItem/TWatchItem";
-import { useHistory } from "react-router-dom"
+import {useHistory} from "react-router-dom"
 import {useWatchService} from "~/src/components/hooks/useWatchService";
+import {Button} from "antd";
+import {selectFileOfType} from "@bytesoftio/helpers-input";
+import {useFileService} from "~/src/components/hooks/useFileService";
+import {ImagePreview} from "~/src/components/blocks/ImagePreview";
+import {WATCH_COLLECTION} from "~/src/const/routeNames";
+
+interface PropsType {
+    watch?: TWatchItem,
+}
 
 const initialFormState: TWatchItem = {
     uuid: null,
@@ -9,38 +18,60 @@ const initialFormState: TWatchItem = {
     model: '',
     description: '',
     priceBought: '',
+    image: null,
 }
+
 
 export const WatchForm = (props: PropsType) => {
 
     const {watch} = props
     const watchService = useWatchService()
+    const fileService = useFileService()
     const history = useHistory()
-    const [state, setState] = useState(initialFormState)
+    const [state, setState] = useState<TWatchItem>(initialFormState)
 
+    // Memo prevents the expensive calculation when we type in a field (which causes a render)
+    const image = useMemo(() => fileService.dataUrlToFile(state.image, 'watch'), [state.image])
+
+    // State initialisation
     useEffect(() => {
         if (!watch) return
         setState(watch)
     }, [])
 
-    function handleChange(key: keyof typeof initialFormState, value: string): void {
+
+    const handleChange = (key: keyof typeof initialFormState, value: string) => {
         setState({
             ...state,
             ...{[key]: value}
         })
     }
 
-    function addWatch() {
+    const addWatch = () => {
         console.log("Adding this watch to the collection: ", state)
         watchService.addWatch(state)
         setState(initialFormState)
         history.push('/watch-collection')
     }
 
-    function updateWatch() {
+    const updateWatch = () => {
         watchService.updateWatch(watch.uuid, state)
-        history.push('/watch-collection')
+        history.push(`/${WATCH_COLLECTION}`)
     }
+
+    const handleSelectFileOfType = async () => {
+        const file = await selectFileOfType('image/*')
+        if (!file) return
+
+        console.log(file)
+        const base64File: string = await fileService.toBase64(file) as any
+        setState({
+            ...state,
+            ...{image: base64File}
+        })
+    }
+
+    // VIEW ------------------------------------------------------------------------------------------------------------
 
     return (
         <div className="watch-collection-form">
@@ -87,14 +118,16 @@ export const WatchForm = (props: PropsType) => {
             </label>
             <br/>
 
-            {/*<label>*/}
-            {/*    Image*/}
-            {/*    <input*/}
-            {/*        type="file"*/}
-            {/*        onChange={handleFileInput}*/}
-            {/*    />*/}
-            {/*</label>*/}
-            {/*<br/>*/}
+            <label>
+                Image
+                <Button onClick={handleSelectFileOfType}>
+                    Add image
+                </Button>
+            </label>
+
+            <br/>
+
+            <ImagePreview file={image} />
 
             <br/>
             <br/>
@@ -108,8 +141,4 @@ export const WatchForm = (props: PropsType) => {
 
     )
 
-}
-
-interface PropsType {
-    watch?: TWatchItem,
 }

@@ -7,18 +7,19 @@ function getWatchList(): TWatchItem[] {
     return JSON.parse(localStorage.getItem(WATCH_LIST) ?? '[]')
 }
 
+
 export const WatchService: IWatchService = {
-    getWatchList(): TWatchItem[] {
+    getWatchList: (): TWatchItem[] => {
         return getWatchList()
     },
 
-    addWatch(watch: TWatchItem): void {
+    addWatch: (watch: TWatchItem): void  =>{
         const watchList = getWatchList()
         const newWatchList = [{...watch, uuid: uuidv4()}, ...watchList]
         localStorage.setItem(WATCH_LIST, JSON.stringify(newWatchList))
     },
 
-    updateWatch(uuid: string, watch: TWatchItem) {
+    updateWatch: (uuid: string, watch: TWatchItem) => {
         const watchList = getWatchList()
         const updatedWatchList = watchList.map(
             aWatch => aWatch.uuid === uuid ? ({...watch, uuid: uuid}) : aWatch
@@ -26,16 +27,16 @@ export const WatchService: IWatchService = {
         localStorage.setItem(WATCH_LIST, JSON.stringify(updatedWatchList))
     },
 
-    clearList() {
+    clearList: () => {
         localStorage.removeItem(WATCH_LIST)
     },
 
-    getWatch(uuid: string): TWatchItem | undefined {
+    getWatch: (uuid: string): TWatchItem | undefined => {
         const watchList = getWatchList()
         return watchList.find(watch => watch.uuid === uuid)
     },
 
-    removeWatch(uuid: string): void {
+    removeWatch: (uuid: string) => {
         const watchList = getWatchList()
         const filteredWatchList = watchList.filter(watch => watch.uuid !== uuid)
         localStorage.setItem(WATCH_LIST, JSON.stringify(filteredWatchList))
