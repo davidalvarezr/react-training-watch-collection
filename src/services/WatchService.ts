@@ -1,8 +1,8 @@
 import IWatchService from "~/src/services/IWatchService";
 import {TWatchItem} from "~/src/types/TWatchItem";
 import {WATCH_LIST} from "~/src/const/localStorageLabels";
-import { v4 as uuidv4 } from 'uuid';
-import {Dropbox, files, Error, DropboxResponse} from "dropbox";
+import {v4 as uuidv4} from 'uuid';
+import {Dropbox, files, DropboxResponse} from "dropbox";
 import {dropbox as dropboxConfig} from "~/src/config/dropbox";
 
 function getWatchList(): TWatchItem[] {
@@ -10,6 +10,7 @@ function getWatchList(): TWatchItem[] {
 }
 
 const dbx = new Dropbox({accessToken: dropboxConfig.ACCESS_TOKEN})
+const directory = '/'
 
 export const WatchService: IWatchService = {
 
@@ -17,7 +18,11 @@ export const WatchService: IWatchService = {
         return getWatchList()
     },
 
-    addWatch: (watch: TWatchItem): void  =>{
+    setWatchList: (watchList) => {
+        localStorage.setItem(WATCH_LIST, JSON.stringify(watchList))
+    },
+
+    addWatch: (watch: TWatchItem): void => {
         const watchList = getWatchList()
         const newWatchList = [{...watch, uuid: uuidv4()}, ...watchList]
         localStorage.setItem(WATCH_LIST, JSON.stringify(newWatchList))
@@ -46,21 +51,23 @@ export const WatchService: IWatchService = {
         localStorage.setItem(WATCH_LIST, JSON.stringify(filteredWatchList))
     },
 
-    // TODO: get the list from the API
-    downloadList(): Promise<TWatchItem[]> {
-        return Promise.resolve([]);
+    downloadList: async (filename) => {
+        const {result} = await dbx.filesDownload({
+            path: `${directory}${filename}`
+        })
+        // @ts-ignore -- return type seems not compatible with what it is actually returned...
+        const fileAsString = await (result.fileBlob as Blob).text()
+        return JSON.parse(fileAsString)
     },
 
-    // TODO: send the list to the API
-    uploadList(watches: TWatchItem[]): Promise<DropboxResponse<files.FileMetadata>> {
-        return new Promise(async(resolve, reject) => {
-            try {
-                const blob = new Blob([JSON.stringify(watches)], {type: "octet/stream"})
-                const dbxUploadResponse = await dbx.filesUpload({path: '/test.json', contents: blob})
-                resolve(dbxUploadResponse)
-            } catch (err: any) {
-                reject(err)
-            }
+
+    // TODO: see if giving the same filename updates it or throw an error
+    uploadList(watches, filename) {
+        const blob = new Blob([JSON.stringify(watches)], {type: "octet/stream"})
+        return dbx.filesUpload({
+            path: `${directory}${filename}`,
+            contents: blob,
+            mode: {".tag": 'overwrite'}
         })
     }
 }
