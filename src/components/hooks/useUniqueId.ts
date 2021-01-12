@@ -3,14 +3,17 @@ import { v4 as uuidv4 } from 'uuid';
 
 // FIXME: Should I use state ? Why ?
 
+type UseUniqueId = () => [string, boolean]
+
 /**
  * Identifies the user of the app.
  * The unique id is used in order to find its file online (<unique_id>.json)
  */
-export const useUniqueId = () => {
+export const useUniqueId: UseUniqueId = () => {
+    console.log('useUniqueId')
 
     let uniqueId: string = null
-    let isNew = false
+    let isNew: boolean = false
 
     const getUniqueId = () => {
         const id = localStorage.getItem(UNIQUE_ID)

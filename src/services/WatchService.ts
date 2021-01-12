@@ -2,8 +2,10 @@ import IWatchService from "~/src/services/IWatchService";
 import {TWatchItem} from "~/src/types/TWatchItem";
 import {WATCH_LIST} from "~/src/const/localStorageLabels";
 import {v4 as uuidv4} from 'uuid';
-import {Dropbox, files, DropboxResponse} from "dropbox";
+import {Dropbox} from "dropbox";
 import {dropbox as dropboxConfig} from "~/src/config/dropbox";
+import {fileDownloadThrower} from "~/src/services/throwers/fileDownloadThrower";
+
 
 function getWatchList(): TWatchItem[] {
     return JSON.parse(localStorage.getItem(WATCH_LIST) ?? '[]')
@@ -13,6 +15,10 @@ const dbx = new Dropbox({accessToken: dropboxConfig.ACCESS_TOKEN})
 const directory = '/'
 
 export const WatchService: IWatchService = {
+
+    isWatchListEmpty() {
+        return [null, '[]'].includes(localStorage.getItem(WATCH_LIST))
+    },
 
     getWatchList: (): TWatchItem[] => {
         return getWatchList()
@@ -52,16 +58,18 @@ export const WatchService: IWatchService = {
     },
 
     downloadList: async (filename) => {
-        const {result} = await dbx.filesDownload({
-            path: `${directory}${filename}`
-        })
-        // @ts-ignore -- return type seems not compatible with what it is actually returned...
-        const fileAsString = await (result.fileBlob as Blob).text()
-        return JSON.parse(fileAsString)
+        try {
+            const {result} = await dbx.filesDownload({
+                path: `${directory}${filename}`
+            })
+            // @ts-ignore -- return type seems not compatible with what it is actually returned...
+            const fileAsString = await (result.fileBlob as Blob).text()
+            return JSON.parse(fileAsString)
+        } catch (e) {
+           fileDownloadThrower(e)
+        }
     },
 
-
-    // TODO: see if giving the same filename updates it or throw an error
     uploadList(watches, filename) {
         const blob = new Blob([JSON.stringify(watches)], {type: "octet/stream"})
         return dbx.filesUpload({

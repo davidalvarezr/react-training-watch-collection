@@ -1,5 +1,6 @@
 import {TWatchItem} from "~/src/types/TWatchItem";
 import {DropboxResponse, files} from "dropbox";
+import DownloadError = files.DownloadError;
 
 export default interface IWatchService {
     addWatch(watch: TWatchItem)
@@ -9,6 +10,11 @@ export default interface IWatchService {
      * Get the watch list from the local storage
      */
     getWatchList(): TWatchItem[]
+
+    /**
+     * Replaces the watchList
+     * @param watchList
+     */
     setWatchList(watchList: TWatchItem[])
     getWatch(uuid: string): TWatchItem
     removeWatch(uuid: string)
@@ -23,4 +29,6 @@ export default interface IWatchService {
      */
     uploadList(watches: TWatchItem[], filename: string): Promise<DropboxResponse<files.FileMetadata>>
     downloadList(filename: string): Promise<TWatchItem[]>
+
+    isWatchListEmpty(): boolean
 }
