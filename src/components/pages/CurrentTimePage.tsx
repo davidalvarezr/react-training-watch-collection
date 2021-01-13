@@ -1,5 +1,5 @@
 import React from 'react'
-import CurrentTime from "~/src/components/CurrentTime";
+import CurrentTime from "~/src/components/blocks/CurrentTime";
 import {PageHeader} from "antd";
 
 function CurrentTimePage() {
