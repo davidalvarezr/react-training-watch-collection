@@ -1,19 +1,35 @@
 import IWatchService from "~/src/services/IWatchService";
 import {TWatchItem} from "~/src/types/TWatchItem";
 import {WATCH_LIST} from "~/src/const/localStorageLabels";
-import { v4 as uuidv4 } from 'uuid';
+import {v4 as uuidv4} from 'uuid';
+import {Dropbox} from "dropbox";
+import {dropbox as dropboxConfig} from "~/src/config/dropbox";
+import {fileDownloadThrower} from "~/src/services/throwers/fileDownloadThrower";
+import {fileUploadThrower} from "~/src/services/throwers/fileUploadThrower";
+
 
 function getWatchList(): TWatchItem[] {
     return JSON.parse(localStorage.getItem(WATCH_LIST) ?? '[]')
 }
 
+const dbx = new Dropbox({accessToken: dropboxConfig.ACCESS_TOKEN})
+const directory = '/'
 
 export const WatchService: IWatchService = {
+
+    isWatchListEmpty() {
+        return [null, '[]'].includes(localStorage.getItem(WATCH_LIST))
+    },
+
     getWatchList: (): TWatchItem[] => {
         return getWatchList()
     },
 
-    addWatch: (watch: TWatchItem): void  =>{
+    setWatchList: (watchList) => {
+        localStorage.setItem(WATCH_LIST, JSON.stringify(watchList))
+    },
+
+    addWatch: (watch: TWatchItem): void => {
         const watchList = getWatchList()
         const newWatchList = [{...watch, uuid: uuidv4()}, ...watchList]
         localStorage.setItem(WATCH_LIST, JSON.stringify(newWatchList))
@@ -42,13 +58,29 @@ export const WatchService: IWatchService = {
         localStorage.setItem(WATCH_LIST, JSON.stringify(filteredWatchList))
     },
 
-    // TODO: get the list from the API
-    downloadList(): Promise<TWatchItem[]> {
-        return Promise.resolve([]);
+    downloadList: async (filename) => {
+        try {
+            const {result} = await dbx.filesDownload({
+                path: `${directory}${filename}`
+            })
+            // @ts-ignore -- return type seems not compatible with what it is actually returned...
+            const fileAsString = await (result.fileBlob as Blob).text()
+            return JSON.parse(fileAsString)
+        } catch (e) {
+           fileDownloadThrower(e)
+        }
     },
 
-    // TODO: send the list to the API
-    uploadList(watches: TWatchItem[]): Promise<void> {
-        return Promise.resolve();
+    uploadList: async (watches, filename) => {
+        try {
+            const blob = new Blob([JSON.stringify(watches)], {type: "octet/stream"})
+            return await dbx.filesUpload({
+                path: `${directory}${filename}`,
+                contents: blob,
+                mode: {".tag": 'overwrite'}
+            })
+        } catch (e) {
+            fileUploadThrower(e)
+        }
     }
 }

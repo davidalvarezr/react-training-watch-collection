@@ -5,6 +5,7 @@ import {WatchCollectionPage} from "~/src/components/pages/WatchCollectionPage";
 import {WatchFormPage} from "~/src/components/pages/WatchFormPage";
 import WatchDetailPage from "~/src/components/pages/WatchDetailPage";
 import CurrentTimePage from "~/src/components/pages/CurrentTimePage";
+import {SettingsPage} from "~/src/components/pages/SettingsPage";
 
 export type RouteDefinition = {
     path: string,
@@ -41,6 +42,11 @@ export const routes: RouteDefinition[] = [
     {
         path: links.currentTime(),
         component: CurrentTimePage,
+        exact: true,
+    },
+    {
+        path: links.settings(),
+        component: SettingsPage,
         exact: true,
     }
 ]
