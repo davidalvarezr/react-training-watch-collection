@@ -1,7 +1,13 @@
 import React from "react"
+import {useErrorFormatter} from "~/src/components/hooks/useErrorFormatter";
+
+
+// FIXME: is it a good way to create a default props ?
+
+export type ErrorMessage = string | Object | Array<any>
 
 type PropTypes = {
-    message: string,
+    message: ErrorMessage
     color?: string
 }
 
@@ -12,17 +18,11 @@ const defaultProps: Partial<PropTypes> = {
 export const ErrorDisplayer = (props: PropTypes) => {
     const {color, message} = {...defaultProps, ...props}
 
-    const getMessage = () => {
-        if (typeof message === 'string') {
-            return message
-        } else () {
-
-        }
-    }
+    const [formatError] = useErrorFormatter()
 
     return (
         <p style={{color}}>
-            {JSON.stringify(message)}
+            {formatError(message)}
         </p>
     )
 }

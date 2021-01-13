@@ -1,3 +1,5 @@
 export const dropbox = {
-    ACCESS_TOKEN: 'lH0ohCzWzzQAAAAAAAAAAYOBBrJnsZrrqKluT12V3uwqn5KUtG3-5yWa6lxxIwUb'
+    ACCESS_TOKEN: process.env.REACT_APP_DROPBOX_ACCESS_TOKEN
 }
+
+console.log('access token: ', dropbox.ACCESS_TOKEN)

@@ -5,6 +5,7 @@ import {v4 as uuidv4} from 'uuid';
 import {Dropbox} from "dropbox";
 import {dropbox as dropboxConfig} from "~/src/config/dropbox";
 import {fileDownloadThrower} from "~/src/services/throwers/fileDownloadThrower";
+import {fileUploadThrower} from "~/src/services/throwers/fileUploadThrower";
 
 
 function getWatchList(): TWatchItem[] {
@@ -70,12 +71,16 @@ export const WatchService: IWatchService = {
         }
     },
 
-    uploadList(watches, filename) {
-        const blob = new Blob([JSON.stringify(watches)], {type: "octet/stream"})
-        return dbx.filesUpload({
-            path: `${directory}${filename}`,
-            contents: blob,
-            mode: {".tag": 'overwrite'}
-        })
+    uploadList: async (watches, filename) => {
+        try {
+            const blob = new Blob([JSON.stringify(watches)], {type: "octet/stream"})
+            return await dbx.filesUpload({
+                path: `${directory}${filename}`,
+                contents: blob,
+                mode: {".tag": 'overwrite'}
+            })
+        } catch (e) {
+            fileUploadThrower(e)
+        }
     }
 }
