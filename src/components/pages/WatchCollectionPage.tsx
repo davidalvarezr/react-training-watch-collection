@@ -1,21 +1,25 @@
-import React, { useEffect, useMemo, useState } from "react"
+import React, { useEffect, useState } from "react"
 import { Link } from "react-router-dom"
 import { Button, Space } from "antd"
 import { WatchList } from "~/src/components/blocks/WatchList"
 import { useWatchService } from "~/src/components/hooks/useWatchService"
-import { WATCH_COLLECTION } from "~/src/const/routeNames"
 import { Watch } from "~/src/types/Watch"
+import { links } from "~/src/config/links"
 
 export const WatchCollectionPage = () => {
     const watchService = useWatchService()
-    const watcheList = watchService.getWatchList()
+    const [watches, setWatches] = useState<Watch[]>([])
 
-    const [watches, setWatches] = useState<Watch[]>(watcheList)
+    useEffect(() => {
+        const fillStateFromStorage = async () => {
+            setWatches(await watchService.getWatchList())
+        }
+        fillStateFromStorage()
+    }, [])
 
-    const clearList = () => {
+    const clearList = async () => {
         if (confirm("Do you really want to clear your list of watches ?")) {
-            watchService.clearList()
-            setWatches(watchService.getWatchList())
+            setWatches(await watchService.clearList())
         }
     }
 
@@ -23,7 +27,7 @@ export const WatchCollectionPage = () => {
         <div>
             <Space>
                 <Button type="primary">
-                    <Link to={`/${WATCH_COLLECTION}/add`}>Add a watch</Link>
+                    <Link to={links.watchAdd()}>Add a watch</Link>
                 </Button>
                 <Button type="primary" danger onClick={clearList}>
                     Clear the list

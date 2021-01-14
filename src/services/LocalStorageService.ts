@@ -3,7 +3,7 @@ import { ILocalStorageService } from "~/src/services/ILocalStorageService"
 export class LocalStorageService implements ILocalStorageService {
     constructor(private storage: Storage) {}
 
-    async setItem(key: string, value: object | string | number): Promise<void> {
+    async setItem<T = object | string | number>(key: string, value: T): Promise<T> {
         let finalValue: string
 
         if (["boolean", "number"].includes(typeof value)) {
@@ -14,6 +14,7 @@ export class LocalStorageService implements ILocalStorageService {
             finalValue = value
         }
         this.storage.setItem(key, finalValue)
+        return value
     }
 
     async getItemAsString(key: string): Promise<string | null> {
@@ -26,6 +27,7 @@ export class LocalStorageService implements ILocalStorageService {
 
     async getItemAsArray<T>(key: string): Promise<Array<T>> {
         const value = JSON.parse(this.storage.getItem(key))
+        if (value === null) return []
         if (!Array.isArray(value)) {
             throw new Error(
                 "The value you are trying to retrieve as Array cannot be casted to an Array"
@@ -34,7 +36,9 @@ export class LocalStorageService implements ILocalStorageService {
         return value
     }
 
-    async removeItem(key: string): Promise<void> {
-        return this.storage.removeItem(key)
+    async removeItem(key: string): Promise<string> {
+        const value = await this.getItemAsString(key)
+        this.storage.removeItem(key)
+        return value
     }
 }

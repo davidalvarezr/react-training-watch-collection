@@ -1,8 +1,4 @@
-import {
-    CURRENT_TIME,
-    WATCH_COLLECTION,
-    SETTINGS,
-} from "~/src/const/routeNames"
+import { CURRENT_TIME, SETTINGS, WATCH_COLLECTION } from "~/src/config/labels"
 
 export const links = {
     home: () => "/",

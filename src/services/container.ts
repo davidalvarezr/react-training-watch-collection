@@ -8,6 +8,7 @@ import { FileService } from "~/src/services/FileService"
 const DIRECTORY = "/"
 
 const dbx = new Dropbox({ accessToken: dropboxConfig.ACCESS_TOKEN })
-const localStorageService = new LocalStorageService(localStorage)
-const watchService = new WatchService(dbx, DIRECTORY, localStorageService, WATCH_LIST)
-const fileService = new FileService()
+
+export const localStorageService = new LocalStorageService(localStorage)
+export const watchService = new WatchService(dbx, DIRECTORY, localStorageService, WATCH_LIST)
+export const fileService = new FileService()

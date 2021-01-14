@@ -22,26 +22,28 @@ export class WatchService implements IWatchService {
         return await this.storageService.getItemAsArray<Watch>(this.watchListLabel)
     }
 
-    async setWatchList(watchList): Promise<void> {
-        return await this.storageService.setItem(this.watchListLabel, watchList)
+    async setWatchList(watchList: Watch[]): Promise<Watch[]> {
+        await this.storageService.setItem(this.watchListLabel, watchList)
+        return await this.getWatchList()
     }
 
-    async addWatch(watch: Watch): Promise<void> {
+    async addWatch(watch: Watch): Promise<Watch[]> {
         const watchList = await this.getWatchList()
         const newWatchList = [{ ...watch, uuid: uuidv4() }, ...watchList]
-        return await this.storageService.setItem(this.watchListLabel, newWatchList)
+        return await this.setWatchList(newWatchList)
     }
 
-    async updateWatch(uuid: string, watch: Watch): Promise<void> {
+    async updateWatch(uuid: string, watch: Watch): Promise<Watch[]> {
         const watchList = await this.getWatchList()
         const updatedWatchList = watchList.map((aWatch) =>
             aWatch.uuid === uuid ? { ...watch, uuid: uuid } : aWatch
         )
-        return await this.storageService.setItem(this.watchListLabel, updatedWatchList)
+        return this.setWatchList(updatedWatchList)
     }
 
-    async clearList() {
-        return await this.storageService.removeItem(this.watchListLabel)
+    async clearList(): Promise<Watch[]> {
+        await this.storageService.removeItem(this.watchListLabel)
+        return await this.storageService.getItemAsArray(this.watchListLabel)
     }
 
     async getWatch(uuid: string): Promise<Watch> {
@@ -49,13 +51,18 @@ export class WatchService implements IWatchService {
         return watchList.find((watch) => watch.uuid === uuid)
     }
 
-    async removeWatch(uuid: string): Promise<void> {
+    async removeWatch(uuid: string): Promise<Watch[]> {
         const watchList = await this.getWatchList()
         const filteredWatchList = watchList.filter((watch) => watch.uuid !== uuid)
-        return this.storageService.setItem(this.watchListLabel, filteredWatchList)
+        return await this.setWatchList(filteredWatchList)
     }
 
-    async downloadList(filename: string): Promise<Watch[]> {
+    async persistWatchesFromCloud(filename: string): Promise<Watch[]> {
+        const watches = await this.downloadList(filename)
+        return await this.setWatchList(watches)
+    }
+
+    private async downloadList(filename: string): Promise<Watch[]> {
         try {
             const { result } = await this.dbx.filesDownload({
                 path: `${this.directory}${filename}`,

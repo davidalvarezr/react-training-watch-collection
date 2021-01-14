@@ -9,11 +9,7 @@ export const WatchList = (props: PropsType) => {
         <WatchItem key={watch.uuid} watch={watch} mode={Mode.SHOW} />
     ))
 
-    return (
-        <Fragment>
-            <Space direction="vertical">{watches}</Space>
-        </Fragment>
-    )
+    return <Space direction="vertical">{watches}</Space>
 }
 
 type PropsType = {

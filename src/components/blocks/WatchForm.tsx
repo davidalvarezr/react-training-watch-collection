@@ -3,8 +3,8 @@ import { Watch } from "~/src/types/Watch"
 import { useHistory } from "react-router-dom"
 import { useWatchService } from "~/src/components/hooks/useWatchService"
 import { useFileService } from "~/src/components/hooks/useFileService"
-import { WATCH_COLLECTION } from "~/src/const/routeNames"
 import { ImageSelector } from "~/src/components/blocks/ImageSelector"
+import { links } from "~/src/config/links"
 
 interface PropsType {
     watch?: Watch
@@ -26,15 +26,11 @@ export const WatchForm = ({ watch }: PropsType) => {
     const [state, setState] = useState<Watch>(watch ?? initialFormState)
 
     // Memo prevents the expensive calculation when we type in a field (which causes a render)
-    const image = useMemo(
-        () => fileService.dataUrlToFileObject(state.image, "watch"),
-        [state.image]
-    )
+    const image = useMemo(() => fileService.dataUrlToFileObject(state.image, "watch"), [
+        state.image,
+    ])
 
-    const handleChange = (
-        key: keyof typeof initialFormState,
-        value: string
-    ) => {
+    const updateState = (key: keyof typeof initialFormState, value: string) => {
         setState({
             ...state,
             ...{ [key]: value },
@@ -45,12 +41,12 @@ export const WatchForm = ({ watch }: PropsType) => {
         console.log("Adding this watch to the collection: ", state)
         watchService.addWatch(state)
         setState(initialFormState)
-        history.push(`/${WATCH_COLLECTION}`)
+        history.push(links.watchCollection())
     }
 
     const updateWatch = () => {
         watchService.updateWatch(watch.uuid, state)
-        history.push(`/${WATCH_COLLECTION}`)
+        history.push(links.watchCollection())
     }
 
     const onImageChange = async (file) => {
@@ -73,7 +69,7 @@ export const WatchForm = ({ watch }: PropsType) => {
                 <input
                     type="text"
                     value={state.brand}
-                    onChange={(evt) => handleChange("brand", evt.target.value)}
+                    onChange={(evt) => updateState("brand", evt.target.value)}
                 />
             </label>
             <br />
@@ -83,7 +79,7 @@ export const WatchForm = ({ watch }: PropsType) => {
                 <input
                     type="text"
                     value={state.model}
-                    onChange={(evt) => handleChange("model", evt.target.value)}
+                    onChange={(evt) => updateState("model", evt.target.value)}
                 />
             </label>
             <br />
@@ -93,9 +89,7 @@ export const WatchForm = ({ watch }: PropsType) => {
                 <input
                     type="text"
                     value={state.description}
-                    onChange={(evt) =>
-                        handleChange("description", evt.target.value)
-                    }
+                    onChange={(evt) => updateState("description", evt.target.value)}
                 />
             </label>
             <br />
@@ -105,9 +99,7 @@ export const WatchForm = ({ watch }: PropsType) => {
                 <input
                     type="number"
                     value={state.priceBought}
-                    onChange={(evt) =>
-                        handleChange("priceBought", evt.target.value)
-                    }
+                    onChange={(evt) => updateState("priceBought", evt.target.value)}
                 />
             </label>
             <br />
@@ -116,9 +108,7 @@ export const WatchForm = ({ watch }: PropsType) => {
 
             <br />
             <br />
-            <button onClick={() => (watch ? updateWatch() : addWatch())}>
-                Submit
-            </button>
+            <button onClick={() => (watch ? updateWatch() : addWatch())}>Submit</button>
         </div>
     )
 }

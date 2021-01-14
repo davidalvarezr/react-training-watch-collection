@@ -4,5 +4,5 @@ export type Watch = {
     model: string
     description: string
     priceBought: string
-    image: string | null
+    image?: string
 }

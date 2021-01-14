@@ -8,7 +8,7 @@ import { Mode } from "~/src/types/Mode"
 import { ImagePreview } from "~/src/components/blocks/ImagePreview"
 import { useFileService } from "~/src/components/hooks/useFileService"
 
-type PropsType = {
+type PropTypes = {
     watch: Watch
     mode: Mode
 }
@@ -18,7 +18,7 @@ const style: CSSProperties = {
 }
 
 // The display of one watch item in the list
-export const WatchItem = ({ watch, mode }: PropsType) => {
+export const WatchItem = ({ watch, mode }: PropTypes) => {
     const history = useHistory()
     const watchService = useWatchService()
     const fileService = useFileService()
@@ -29,9 +29,9 @@ export const WatchItem = ({ watch, mode }: PropsType) => {
         image = useMemo(() => fileService.dataUrlToFileObject(watch.image, "watch"), [watch.image])
     }
 
-    function deleteWatch() {
+    const deleteWatch = async () => {
         if (!confirm("Do you really want to delete this watch ?")) return
-        watchService.removeWatch(uuid)
+        await watchService.removeWatch(uuid)
         history.push(links.watchCollection())
     }
 
