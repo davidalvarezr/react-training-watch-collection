@@ -9,4 +9,6 @@ export interface IFileService {
      * Give the result of this function as an attribute "src" of an "img" component
      */
     fileUrl(file: File): string
+
+    getFilenameFromCurrentUser(extension?: string): Promise<string>
 }

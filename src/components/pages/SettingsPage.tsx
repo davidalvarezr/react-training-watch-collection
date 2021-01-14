@@ -1,23 +1,36 @@
-import React, { ChangeEvent, Fragment, useMemo, useState } from "react"
+import React, { ChangeEvent, Fragment, useEffect, useState } from "react"
 import { useWatchService } from "~/src/components/hooks/useWatchService"
 import { useUniqueId } from "~/src/components/hooks/useUniqueId"
 import { useLoading } from "~/src/components/hooks/useLoading"
 import { ErrorDisplayer } from "~/src/components/blocks/ErrorDisplayer"
 import { useErrorMapper } from "~/src/components/hooks/useErrorMapper"
+import { UNIQUE_ID } from "~/src/config/labels"
+import { useLocalStorageService } from "~/src/components/hooks/useLocalStorageService"
+import { v4 as uuidv4 } from "uuid"
 
 export const SettingsPage = () => {
     const watchService = useWatchService()
+    const storage = useLocalStorageService()
+    const [uniqueId, setUniqueId] = useState<string>(null)
 
-    // FIXME: is it correct to use useMemo here, because we don't want the function to execute at each update ?
-    const [uniqueId] = useMemo(() => useUniqueId(), [])
-    const [downloadCode, setDownloadCode] = useState(uniqueId)
-    const [
-        isUploading,
-        errorUpload,
-        beginUpload,
-        endUpload,
-        errorWhileUploading,
-    ] = useLoading(false)
+    useEffect(() => {
+        const loadUniqueId = async () => {
+            const id = await storage.getItemAsString(UNIQUE_ID)
+            if (id === null) {
+                const newId = uuidv4()
+                setUniqueId(newId)
+                storage.setItem(UNIQUE_ID, id)
+            } else {
+                setUniqueId(id)
+            }
+        }
+
+        loadUniqueId()
+    })
+
+    const [isUploading, errorUpload, beginUpload, endUpload, errorWhileUploading] = useLoading(
+        false
+    )
     const [
         isDownloading,
         errorDownload,
@@ -27,13 +40,10 @@ export const SettingsPage = () => {
     ] = useLoading(false)
     const [msgFromError] = useErrorMapper()
 
-    const filename = `${uniqueId}.json` // the filename to be uploaded
-    const getFilename = (id) => `${id}.json` // the filename to be downloaded
-
     const uploadWatches = async () => {
         beginUpload()
         try {
-            await watchService.uploadList(watchService.getWatchList(), filename)
+            await watchService.sendListOnline()
         } catch (e) {
             errorWhileUploading(msgFromError(e))
         }
@@ -42,7 +52,7 @@ export const SettingsPage = () => {
 
     const downloadWatches = async () => {
         if (
-            !watchService.isWatchListEmpty() &&
+            !(await watchService.isWatchListEmpty()) &&
             !confirm(
                 "Downloading your list from the cloud will erase the one you actually have in the app"
             )
@@ -51,10 +61,7 @@ export const SettingsPage = () => {
         }
         beginDownload()
         try {
-            const watchList = await watchService.downloadList(
-                getFilename(downloadCode)
-            )
-            watchService.setWatchList(watchList)
+            await watchService.persistWatchesFromCloud()
         } catch (e) {
             errorWhileDownloading(msgFromError(e))
         }
@@ -84,16 +91,20 @@ export const SettingsPage = () => {
             {/*DOWNLOAD ---------------------------------------------------------------------------------------------*/}
 
             {!isDownloading ? (
-                <Fragment>
-                    <button onClick={downloadWatches}>download</button>
-                    <input
-                        type="text"
-                        placeholder="code"
-                        onChange={handleInput}
-                        value={downloadCode}
-                        style={{ width: "300px", maxWidth: "100%" }}
-                    />
-                </Fragment>
+                uniqueId !== null ? (
+                    <Fragment>
+                        <button onClick={downloadWatches}>download</button>
+                        <input
+                            type="text"
+                            placeholder="code"
+                            onChange={handleInput}
+                            value={uniqueId}
+                            style={{ width: "300px", maxWidth: "100%" }}
+                        />
+                    </Fragment>
+                ) : (
+                    <p>waiting for code...</p>
+                )
             ) : (
                 <p>Your file is downloading...</p>
             )}

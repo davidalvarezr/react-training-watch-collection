@@ -1,8 +1,6 @@
-import { FileDownloadErrorType } from "~/src/types/dropbox-errors/FileDownloadError"
-import { FileUploadErrorType } from "~/src/types/dropbox-errors/FileUploadError"
 import { ErrorMessage } from "~/src/components/blocks/ErrorDisplayer"
+import { DropboxError } from "~/src/config/dropboxConfig"
 
-type DropboxError = FileDownloadErrorType | FileUploadErrorType
 type Mapper = {
     [elt in DropboxError]: string
 }

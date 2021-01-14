@@ -1,7 +1,20 @@
 import { IFileService } from "~/src/services/IFileService"
+import { ILocalStorageService } from "~/src/services/ILocalStorageService"
+import { UNIQUE_ID } from "~/src/config/labels"
 
 export class FileService implements IFileService {
-    toBase64(file) {
+    /**
+     *
+     * @param extension the file extension on dropbox
+     * @param storage
+     */
+    constructor(
+        private extension: string,
+        private storage: ILocalStorageService,
+        private uniqueIdLabel: string
+    ) {}
+
+    toBase64(file: File): Promise<string> {
         return new Promise<string>((resolve, reject) => {
             if ([null, undefined].includes(file)) return null
 
@@ -19,7 +32,7 @@ export class FileService implements IFileService {
         })
     }
 
-    dataUrlToFileObject(dataurl, filename) {
+    dataUrlToFileObject(dataurl: string, filename: string): File {
         if ([null, undefined].includes(dataurl)) return null
 
         const arr = dataurl.split(",")
@@ -35,7 +48,17 @@ export class FileService implements IFileService {
         return new File([u8arr], filename, { type: mime })
     }
 
-    fileUrl(file: File) {
+    fileUrl(file: File): string {
         return URL.createObjectURL(file)
+    }
+
+    async getFilenameFromCurrentUser(extension = this.extension): Promise<string> {
+        const uniqueId = await this.storage.getItemAsString(UNIQUE_ID)
+        // TODO: test not null
+        return this.filenameFromUuid(uniqueId, extension)
+    }
+
+    private filenameFromUuid(uuid: string, extension = this.extension): string {
+        return `${uuid}${extension}`
     }
 }

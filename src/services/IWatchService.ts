@@ -40,21 +40,14 @@ export default interface IWatchService {
      */
     updateWatch(uuid: string, watch: Watch): Promise<Watch[]>
 
-    /**
-     * Upload a file to Dropbox
-     * @param watches the array of watches to upload
-     * @param filename (with extension). Best if randomly generated so that a lot of users can find their own lists, and
-     * uploading the list would not result in an overwrite of another user's list. The randomly generated filename
-     * should be stored in the local storage of the user so he can retrieve/update (sync) it easily
-     */
-    uploadList(watches: Watch[], filename: string): Promise<DropboxResponse<files.FileMetadata>>
+    sendListOnline(): Promise<Watch[]>
 
     /**
      * Fetches watches form the cloud and store it in local storage
      * @param filename
      * @return the watches that have been fetched and stored
      */
-    persistWatchesFromCloud(filename: string): Promise<Watch[]>
+    persistWatchesFromCloud(filename?: string): Promise<Watch[]>
 
     isWatchListEmpty(): Promise<boolean>
 }

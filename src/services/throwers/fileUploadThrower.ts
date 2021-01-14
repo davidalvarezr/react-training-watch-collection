@@ -1,5 +1,5 @@
 import { DropboxResponseError } from "dropbox"
-import { FileUploadError } from "~/src/types/dropbox-errors/FileUploadError"
+import { DropboxError } from "~/src/config/dropboxConfig"
 
 /**
  * Throws custom exception according to exception thrown.
@@ -11,7 +11,7 @@ export const fileUploadThrower = (responseError: DropboxResponseError<any>) => {
         responseError.error ===
         'Error in call to API function "files/upload": The given OAuth 2 access token is malformed.'
     ) {
-        throw FileUploadError.TOKEN_MALFORMED
+        throw DropboxError.TOKEN_MALFORMED
     }
 
     const { error_summary } = responseError.error
@@ -24,7 +24,7 @@ export const fileUploadThrower = (responseError: DropboxResponseError<any>) => {
         case "invalid_access_token/.":
         case "invalid_access_token/..":
         case "invalid_access_token/...":
-            throw FileUploadError.INVALID_ACCESS_TOKEN
+            throw DropboxError.INVALID_ACCESS_TOKEN
         default:
             throw responseError
     }

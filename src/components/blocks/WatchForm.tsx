@@ -50,7 +50,7 @@ export const WatchForm = ({ watch }: PropsType) => {
     }
 
     const onImageChange = async (file) => {
-        const base64File: string = (await fileService.toBase64(file)) as any
+        const base64File: string = await fileService.toBase64(file)
         setState({
             ...state,
             ...{ image: base64File },

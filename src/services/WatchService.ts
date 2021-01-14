@@ -5,13 +5,15 @@ import { Dropbox, DropboxResponse, files } from "dropbox"
 import { fileDownloadThrower } from "~/src/services/throwers/fileDownloadThrower"
 import { fileUploadThrower } from "~/src/services/throwers/fileUploadThrower"
 import { ILocalStorageService } from "~/src/services/ILocalStorageService"
+import { IFileService } from "~/src/services/IFileService"
 
 export class WatchService implements IWatchService {
     constructor(
         private dbx: Dropbox,
         private directory: string,
+        private watchListLabel: string,
         private storageService: ILocalStorageService,
-        private watchListLabel: string
+        private fileService: IFileService
     ) {}
 
     async isWatchListEmpty(): Promise<boolean> {
@@ -57,9 +59,20 @@ export class WatchService implements IWatchService {
         return await this.setWatchList(filteredWatchList)
     }
 
-    async persistWatchesFromCloud(filename: string): Promise<Watch[]> {
+    async persistWatchesFromCloud(filenameParam: string = null): Promise<Watch[]> {
+        const filename =
+            filenameParam === null
+                ? await this.fileService.getFilenameFromCurrentUser()
+                : filenameParam
         const watches = await this.downloadList(filename)
         return await this.setWatchList(watches)
+    }
+
+    async sendListOnline(): Promise<Watch[]> {
+        const watches = await this.getWatchList()
+        const filename = await this.fileService.getFilenameFromCurrentUser()
+        await this.uploadList(watches, filename)
+        return watches
     }
 
     private async downloadList(filename: string): Promise<Watch[]> {
@@ -67,6 +80,7 @@ export class WatchService implements IWatchService {
             const { result } = await this.dbx.filesDownload({
                 path: `${this.directory}${filename}`,
             })
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
             // @ts-ignore -- return type seems not compatible with what it is actually returned...
             const fileAsString = await (result.fileBlob as Blob).text()
             return JSON.parse(fileAsString)
@@ -75,7 +89,14 @@ export class WatchService implements IWatchService {
         }
     }
 
-    async uploadList(
+    /**
+     * Upload a file to Dropbox
+     * @param watches the array of watches to upload
+     * @param filename (with extension). Best if randomly generated so that a lot of users can find their own lists, and
+     * uploading the list would not result in an overwrite of another user's list. The randomly generated filename
+     * should be stored in the local storage of the user so he can retrieve/update (sync) it easily
+     */
+    private async uploadList(
         watches: Watch[],
         filename: string
     ): Promise<DropboxResponse<files.FileMetadata>> {

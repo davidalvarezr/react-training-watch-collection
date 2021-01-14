@@ -12,7 +12,7 @@ type UseLoading = (
     initVal: boolean
 ) => [boolean, ErrorMessage, BeginLoading, FinishLoading, ErrorWhileLoading]
 
-export const useLoading: UseLoading = (initVal: boolean = false) => {
+export const useLoading: UseLoading = (initVal = false) => {
     const [isLoading, setIsLoading] = useState(initVal)
     const [error, setError] = useState(null)
 

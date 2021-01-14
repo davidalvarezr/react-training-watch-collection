@@ -1,5 +1,6 @@
-import { localStorageService } from "~/src/services/container"
+import { storageService } from "~/src/services/container"
+import { ILocalStorageService } from "~/src/services/ILocalStorageService"
 
-export const useLocalStorageService = () => {
-    return localStorageService
+export const useLocalStorageService = (): ILocalStorageService => {
+    return storageService
 }
