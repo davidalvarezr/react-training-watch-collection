@@ -1,4 +1,4 @@
-export type TWatchItem = {
+export type Watch = {
     uuid: string
     brand: string
     model: string

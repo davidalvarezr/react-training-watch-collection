@@ -1,5 +1,5 @@
 import React, { CSSProperties, useMemo } from "react"
-import { TWatchItem } from "~/src/types/TWatchItem"
+import { Watch } from "~/src/types/Watch"
 import { Button, Card, Space } from "antd"
 import { Link, useHistory } from "react-router-dom"
 import { useWatchService } from "~/src/components/hooks/useWatchService"
@@ -9,7 +9,7 @@ import { ImagePreview } from "~/src/components/blocks/ImagePreview"
 import { useFileService } from "~/src/components/hooks/useFileService"
 
 type PropsType = {
-    watch: TWatchItem
+    watch: Watch
     mode: Mode
 }
 
@@ -26,10 +26,7 @@ export const WatchItem = ({ watch, mode }: PropsType) => {
 
     let image = null
     if (watch.image) {
-        image = useMemo(
-            () => fileService.dataUrlToFileObject(watch.image, "watch"),
-            [watch.image]
-        )
+        image = useMemo(() => fileService.dataUrlToFileObject(watch.image, "watch"), [watch.image])
     }
 
     function deleteWatch() {
@@ -58,9 +55,9 @@ export const WatchItem = ({ watch, mode }: PropsType) => {
 
     const controls = () => {
         switch (mode) {
-            case Mode.Show:
+            case Mode.SHOW:
                 return showControls
-            case Mode.Edit:
+            case Mode.EDIT:
                 return editControls
             default:
                 return "ERROR"

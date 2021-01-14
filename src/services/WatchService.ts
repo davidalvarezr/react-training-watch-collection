@@ -1,62 +1,61 @@
 import IWatchService from "~/src/services/IWatchService"
-import { TWatchItem } from "~/src/types/TWatchItem"
-import { WATCH_LIST } from "~/src/const/localStorageLabels"
+import { Watch } from "~/src/types/Watch"
 import { v4 as uuidv4 } from "uuid"
-import { Dropbox } from "dropbox"
+import { Dropbox, DropboxResponse, files } from "dropbox"
 import { fileDownloadThrower } from "~/src/services/throwers/fileDownloadThrower"
 import { fileUploadThrower } from "~/src/services/throwers/fileUploadThrower"
-
-function getWatchList(): TWatchItem[] {
-    return JSON.parse(localStorage.getItem(WATCH_LIST) ?? "[]")
-}
+import { ILocalStorageService } from "~/src/services/ILocalStorageService"
 
 export class WatchService implements IWatchService {
-    constructor(private dbx: Dropbox, private directory: string) {}
+    constructor(
+        private dbx: Dropbox,
+        private directory: string,
+        private storageService: ILocalStorageService,
+        private watchListLabel: string
+    ) {}
 
-    isWatchListEmpty() {
-        return [null, "[]"].includes(localStorage.getItem(WATCH_LIST))
+    async isWatchListEmpty(): Promise<boolean> {
+        return [null, "[]"].includes(await this.storageService.getItemAsString(this.watchListLabel))
     }
 
-    getWatchList() {
-        return getWatchList()
+    async getWatchList(): Promise<Watch[]> {
+        return await this.storageService.getItemAsArray<Watch>(this.watchListLabel)
     }
 
-    setWatchList(watchList) {
-        localStorage.setItem(WATCH_LIST, JSON.stringify(watchList))
+    async setWatchList(watchList): Promise<void> {
+        return await this.storageService.setItem(this.watchListLabel, watchList)
     }
 
-    addWatch(watch: TWatchItem) {
-        const watchList = getWatchList()
+    async addWatch(watch: Watch): Promise<void> {
+        const watchList = await this.getWatchList()
         const newWatchList = [{ ...watch, uuid: uuidv4() }, ...watchList]
-        localStorage.setItem(WATCH_LIST, JSON.stringify(newWatchList))
+        return await this.storageService.setItem(this.watchListLabel, newWatchList)
     }
 
-    updateWatch(uuid: string, watch: TWatchItem) {
-        const watchList = getWatchList()
+    async updateWatch(uuid: string, watch: Watch): Promise<void> {
+        const watchList = await this.getWatchList()
         const updatedWatchList = watchList.map((aWatch) =>
             aWatch.uuid === uuid ? { ...watch, uuid: uuid } : aWatch
         )
-        localStorage.setItem(WATCH_LIST, JSON.stringify(updatedWatchList))
+        return await this.storageService.setItem(this.watchListLabel, updatedWatchList)
     }
 
-    clearList() {
-        localStorage.removeItem(WATCH_LIST)
+    async clearList() {
+        return await this.storageService.removeItem(this.watchListLabel)
     }
 
-    getWatch(uuid: string) {
-        const watchList = getWatchList()
+    async getWatch(uuid: string): Promise<Watch> {
+        const watchList = await this.getWatchList()
         return watchList.find((watch) => watch.uuid === uuid)
     }
 
-    removeWatch(uuid: string) {
-        const watchList = getWatchList()
-        const filteredWatchList = watchList.filter(
-            (watch) => watch.uuid !== uuid
-        )
-        localStorage.setItem(WATCH_LIST, JSON.stringify(filteredWatchList))
+    async removeWatch(uuid: string): Promise<void> {
+        const watchList = await this.getWatchList()
+        const filteredWatchList = watchList.filter((watch) => watch.uuid !== uuid)
+        return this.storageService.setItem(this.watchListLabel, filteredWatchList)
     }
 
-    async downloadList(filename) {
+    async downloadList(filename: string): Promise<Watch[]> {
         try {
             const { result } = await this.dbx.filesDownload({
                 path: `${this.directory}${filename}`,
@@ -69,7 +68,10 @@ export class WatchService implements IWatchService {
         }
     }
 
-    async uploadList(watches, filename) {
+    async uploadList(
+        watches: Watch[],
+        filename: string
+    ): Promise<DropboxResponse<files.FileMetadata>> {
         try {
             const blob = new Blob([JSON.stringify(watches)], {
                 type: "octet/stream",

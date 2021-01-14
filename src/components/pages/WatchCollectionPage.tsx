@@ -4,13 +4,13 @@ import { Button, Space } from "antd"
 import { WatchList } from "~/src/components/blocks/WatchList"
 import { useWatchService } from "~/src/components/hooks/useWatchService"
 import { WATCH_COLLECTION } from "~/src/const/routeNames"
-import { TWatchItem } from "~/src/types/TWatchItem"
+import { Watch } from "~/src/types/Watch"
 
 export const WatchCollectionPage = () => {
     const watchService = useWatchService()
     const watcheList = watchService.getWatchList()
 
-    const [watches, setWatches] = useState<TWatchItem[]>(watcheList)
+    const [watches, setWatches] = useState<Watch[]>(watcheList)
 
     const clearList = () => {
         if (confirm("Do you really want to clear your list of watches ?")) {

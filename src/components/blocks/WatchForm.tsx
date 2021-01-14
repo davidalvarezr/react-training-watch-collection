@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from "react"
-import { TWatchItem } from "~/src/types/TWatchItem"
+import { Watch } from "~/src/types/Watch"
 import { useHistory } from "react-router-dom"
 import { useWatchService } from "~/src/components/hooks/useWatchService"
 import { useFileService } from "~/src/components/hooks/useFileService"
@@ -7,10 +7,10 @@ import { WATCH_COLLECTION } from "~/src/const/routeNames"
 import { ImageSelector } from "~/src/components/blocks/ImageSelector"
 
 interface PropsType {
-    watch?: TWatchItem
+    watch?: Watch
 }
 
-const initialFormState: TWatchItem = {
+const initialFormState: Watch = {
     uuid: null,
     brand: "",
     model: "",
@@ -23,7 +23,7 @@ export const WatchForm = ({ watch }: PropsType) => {
     const watchService = useWatchService()
     const fileService = useFileService()
     const history = useHistory()
-    const [state, setState] = useState<TWatchItem>(watch ?? initialFormState)
+    const [state, setState] = useState<Watch>(watch ?? initialFormState)
 
     // Memo prevents the expensive calculation when we type in a field (which causes a render)
     const image = useMemo(

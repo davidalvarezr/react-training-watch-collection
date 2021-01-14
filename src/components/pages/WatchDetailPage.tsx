@@ -11,7 +11,7 @@ function WatchDetailPage() {
 
     return (
         <div>
-            <WatchItem watch={watch} mode={Mode.Edit} />
+            <WatchItem watch={watch} mode={Mode.EDIT} />
         </div>
     )
 }

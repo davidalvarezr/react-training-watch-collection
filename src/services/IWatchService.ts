@@ -1,24 +1,24 @@
-import { TWatchItem } from "~/src/types/TWatchItem"
+import { Watch } from "~/src/types/Watch"
 import { DropboxResponse, files } from "dropbox"
 import DownloadError = files.DownloadError
 
 export default interface IWatchService {
-    addWatch(watch: TWatchItem)
+    addWatch(watch: Watch)
     clearList()
 
     /**
      * Get the watch list from the local storage
      */
-    getWatchList(): TWatchItem[]
+    getWatchList(): Promise<Watch[]>
 
     /**
      * Replaces the watchList
      * @param watchList
      */
-    setWatchList(watchList: TWatchItem[])
-    getWatch(uuid: string): TWatchItem
-    removeWatch(uuid: string)
-    updateWatch(uuid: string, watch: TWatchItem)
+    setWatchList(watchList: Watch[])
+    getWatch(uuid: string): Promise<Watch>
+    removeWatch(uuid: string): Promise<void>
+    updateWatch(uuid: string, watch: Watch)
 
     /**
      * Upload a file to Dropbox
@@ -27,11 +27,8 @@ export default interface IWatchService {
      * uploading the list would not result in an overwrite of another user's list. The randomly generated filename
      * should be stored in the local storage of the user so he can retrieve/update (sync) it easily
      */
-    uploadList(
-        watches: TWatchItem[],
-        filename: string
-    ): Promise<DropboxResponse<files.FileMetadata>>
-    downloadList(filename: string): Promise<TWatchItem[]>
+    uploadList(watches: Watch[], filename: string): Promise<DropboxResponse<files.FileMetadata>>
+    downloadList(filename: string): Promise<Watch[]>
 
-    isWatchListEmpty(): boolean
+    isWatchListEmpty(): Promise<boolean>
 }

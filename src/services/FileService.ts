@@ -11,7 +11,7 @@ export class FileService implements IFileService {
             reader.onload = () => {
                 // console.log(typeof reader.result, reader.result)
                 if (typeof reader.result !== "string") {
-                    throw new TypeError()
+                    throw new Error("reader.result wrong type")
                 }
                 resolve(reader.result as string)
             }
