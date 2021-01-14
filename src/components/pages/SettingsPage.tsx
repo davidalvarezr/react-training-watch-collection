@@ -1,19 +1,30 @@
-import React, {ChangeEvent, Fragment, useMemo, useState} from "react"
-import {useWatchService} from "~/src/components/hooks/useWatchService";
-import {useUniqueId} from "~/src/components/hooks/useUniqueId";
-import {useLoading} from "~/src/components/hooks/useLoading";
-import {ErrorDisplayer} from "~/src/components/blocks/ErrorDisplayer";
-import {useErrorMapper} from "~/src/components/hooks/useErrorMapper";
+import React, { ChangeEvent, Fragment, useMemo, useState } from "react"
+import { useWatchService } from "~/src/components/hooks/useWatchService"
+import { useUniqueId } from "~/src/components/hooks/useUniqueId"
+import { useLoading } from "~/src/components/hooks/useLoading"
+import { ErrorDisplayer } from "~/src/components/blocks/ErrorDisplayer"
+import { useErrorMapper } from "~/src/components/hooks/useErrorMapper"
 
 export const SettingsPage = () => {
-
     const watchService = useWatchService()
 
     // FIXME: is it correct to use useMemo here, because we don't want the function to execute at each update ?
     const [uniqueId] = useMemo(() => useUniqueId(), [])
     const [downloadCode, setDownloadCode] = useState(uniqueId)
-    const [isUploading, errorUpload, beginUpload, endUpload, errorWhileUploading] = useLoading(false)
-    const [isDownloading, errorDownload, beginDownload, endDownload, errorWhileDownloading] = useLoading(false)
+    const [
+        isUploading,
+        errorUpload,
+        beginUpload,
+        endUpload,
+        errorWhileUploading,
+    ] = useLoading(false)
+    const [
+        isDownloading,
+        errorDownload,
+        beginDownload,
+        endDownload,
+        errorWhileDownloading,
+    ] = useLoading(false)
     const [msgFromError] = useErrorMapper()
 
     const filename = `${uniqueId}.json` // the filename to be uploaded
@@ -30,13 +41,19 @@ export const SettingsPage = () => {
     }
 
     const downloadWatches = async () => {
-        if (!watchService.isWatchListEmpty()
-            && !confirm("Downloading your list from the cloud will erase the one you actually have in the app")) {
+        if (
+            !watchService.isWatchListEmpty() &&
+            !confirm(
+                "Downloading your list from the cloud will erase the one you actually have in the app"
+            )
+        ) {
             return
         }
         beginDownload()
         try {
-            const watchList = await watchService.downloadList(getFilename(downloadCode))
+            const watchList = await watchService.downloadList(
+                getFilename(downloadCode)
+            )
             watchService.setWatchList(watchList)
         } catch (e) {
             errorWhileDownloading(msgFromError(e))
@@ -44,7 +61,9 @@ export const SettingsPage = () => {
         endDownload()
     }
 
-    const handleInput = (e: ChangeEvent<HTMLInputElement>) => { setDownloadCode(e.target.value) }
+    const handleInput = (e: ChangeEvent<HTMLInputElement>) => {
+        setDownloadCode(e.target.value)
+    }
 
     return (
         <div>
@@ -52,40 +71,34 @@ export const SettingsPage = () => {
 
             {/*UPLOAD -----------------------------------------------------------------------------------------------*/}
 
-            {!isUploading ?
-                <button onClick={uploadWatches}>
-                    upload
-                </button> :
+            {!isUploading ? (
+                <button onClick={uploadWatches}>upload</button>
+            ) : (
                 <p>Your file is uploading...</p>
-            }
+            )}
 
             {errorUpload && <ErrorDisplayer message={errorUpload} />}
 
-            <br/>
+            <br />
 
             {/*DOWNLOAD ---------------------------------------------------------------------------------------------*/}
 
-            {!isDownloading ?
-                (
-                    <Fragment>
-                        <button onClick={downloadWatches}>
-                            download
-                        </button>
-                        <input
-                            type="text"
-                            placeholder="code"
-                            onChange={handleInput}
-                            value={downloadCode}
-                            style={{width: '300px', maxWidth: '100%'}}
-                        />
-                    </Fragment>
-
-                ) :
+            {!isDownloading ? (
+                <Fragment>
+                    <button onClick={downloadWatches}>download</button>
+                    <input
+                        type="text"
+                        placeholder="code"
+                        onChange={handleInput}
+                        value={downloadCode}
+                        style={{ width: "300px", maxWidth: "100%" }}
+                    />
+                </Fragment>
+            ) : (
                 <p>Your file is downloading...</p>
-            }
+            )}
 
             {errorDownload && <ErrorDisplayer message={errorDownload} />}
-
         </div>
     )
 }

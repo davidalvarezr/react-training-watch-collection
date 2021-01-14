@@ -1,6 +1,6 @@
-import {ThrowersName} from "~/src/config/throwers";
-import {fileDownloadThrower} from "~/src/services/throwers/fileDownloadThrower";
-import {fileUploadThrower} from "~/src/services/throwers/fileUploadThrower";
+import { ThrowersName } from "~/src/config/throwers"
+import { fileDownloadThrower } from "~/src/services/throwers/fileDownloadThrower"
+import { fileUploadThrower } from "~/src/services/throwers/fileUploadThrower"
 
 export const useThrower = (throwerName: ThrowersName) => {
     switch (throwerName) {
@@ -9,6 +9,6 @@ export const useThrower = (throwerName: ThrowersName) => {
         case "fileUpload":
             return fileUploadThrower
         default:
-            throw new Error('Thrower not found')
+            throw new Error("Thrower not found")
     }
 }

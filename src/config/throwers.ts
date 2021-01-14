@@ -1,6 +1,3 @@
-const throwerNames = <const>[
-    'fileDownload',
-    'fileUpload',
-]
+const throwerNames = <const>["fileDownload", "fileUpload"]
 
 export type ThrowersName = typeof throwerNames[number]

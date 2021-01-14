@@ -1,16 +1,16 @@
-import {links} from "~/src/config/links";
-import {HomePage} from "~/src/components/pages/HomePage";
-import {FunctionComponent} from "react";
-import {WatchCollectionPage} from "~/src/components/pages/WatchCollectionPage";
-import {WatchFormPage} from "~/src/components/pages/WatchFormPage";
-import WatchDetailPage from "~/src/components/pages/WatchDetailPage";
-import CurrentTimePage from "~/src/components/pages/CurrentTimePage";
-import {SettingsPage} from "~/src/components/pages/SettingsPage";
+import { links } from "~/src/config/links"
+import { HomePage } from "~/src/components/pages/HomePage"
+import { FunctionComponent } from "react"
+import { WatchCollectionPage } from "~/src/components/pages/WatchCollectionPage"
+import { WatchFormPage } from "~/src/components/pages/WatchFormPage"
+import WatchDetailPage from "~/src/components/pages/WatchDetailPage"
+import CurrentTimePage from "~/src/components/pages/CurrentTimePage"
+import { SettingsPage } from "~/src/components/pages/SettingsPage"
 
 export type RouteDefinition = {
-    path: string,
-    component: FunctionComponent,
-    exact?: boolean,
+    path: string
+    component: FunctionComponent
+    exact?: boolean
 }
 
 export const routes: RouteDefinition[] = [
@@ -48,6 +48,5 @@ export const routes: RouteDefinition[] = [
         path: links.settings(),
         component: SettingsPage,
         exact: true,
-    }
+    },
 ]
-

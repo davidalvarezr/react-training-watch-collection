@@ -1,10 +1,10 @@
-import React, {useEffect, useMemo, useState} from "react"
-import {Link} from "react-router-dom"
-import {Button, Space} from "antd"
-import {WatchList} from "~/src/components/blocks/WatchList";
-import {useWatchService} from "~/src/components/hooks/useWatchService";
-import {WATCH_COLLECTION} from "~/src/const/routeNames";
-import {TWatchItem} from "~/src/types/TWatchItem";
+import React, { useEffect, useMemo, useState } from "react"
+import { Link } from "react-router-dom"
+import { Button, Space } from "antd"
+import { WatchList } from "~/src/components/blocks/WatchList"
+import { useWatchService } from "~/src/components/hooks/useWatchService"
+import { WATCH_COLLECTION } from "~/src/const/routeNames"
+import { TWatchItem } from "~/src/types/TWatchItem"
 
 export const WatchCollectionPage = () => {
     const watchService = useWatchService()
@@ -30,10 +30,10 @@ export const WatchCollectionPage = () => {
                 </Button>
             </Space>
 
-            <div style={{height: '10px'}}/>
+            <div style={{ height: "10px" }} />
 
             <div>
-                <WatchList watches={watches}/>
+                <WatchList watches={watches} />
             </div>
         </div>
     )

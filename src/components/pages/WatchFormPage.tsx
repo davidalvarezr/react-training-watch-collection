@@ -1,7 +1,7 @@
-import {WatchForm} from "~/src/components/blocks/WatchForm";
-import React from "react";
-import {useParams} from "react-router-dom"
-import {useWatchService} from "~/src/components/hooks/useWatchService";
+import { WatchForm } from "~/src/components/blocks/WatchForm"
+import React from "react"
+import { useParams } from "react-router-dom"
+import { useWatchService } from "~/src/components/hooks/useWatchService"
 
 /**
  * Add or edit a watch
@@ -9,10 +9,8 @@ import {useWatchService} from "~/src/components/hooks/useWatchService";
  */
 export const WatchFormPage = () => {
     const watchService = useWatchService()
-    const {uuid} = useParams()
+    const { uuid } = useParams()
     const watch = watchService.getWatch(uuid)
 
-    return (
-        <WatchForm watch={watch}/>
-    )
+    return <WatchForm watch={watch} />
 }

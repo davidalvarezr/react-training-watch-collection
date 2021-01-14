@@ -1,5 +1,5 @@
-import {UNIQUE_ID} from "~/src/const/localStorageLabels";
-import { v4 as uuidv4 } from 'uuid';
+import { UNIQUE_ID } from "~/src/const/localStorageLabels"
+import { v4 as uuidv4 } from "uuid"
 
 // FIXME: Should I use state ? Why ?
 
@@ -10,7 +10,7 @@ type UseUniqueId = () => [string, boolean]
  * The unique id is used in order to find its file online (<unique_id>.json)
  */
 export const useUniqueId: UseUniqueId = () => {
-    console.log('useUniqueId')
+    console.log("useUniqueId")
 
     let uniqueId: string = null
     let isNew: boolean = false
@@ -26,7 +26,9 @@ export const useUniqueId: UseUniqueId = () => {
 
     const generateUniqueId = () => {
         if (localStorage.getItem(UNIQUE_ID) !== null) {
-            console.error('Unique id already exist for this user. Not generating a new one...')
+            console.error(
+                "Unique id already exist for this user. Not generating a new one..."
+            )
             uniqueId = localStorage.getItem(UNIQUE_ID)
             return
         }

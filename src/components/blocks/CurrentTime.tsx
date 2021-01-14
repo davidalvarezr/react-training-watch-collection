@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, { useEffect, useState } from "react"
 
 function CurrentTime() {
     const [time, setTime] = useState(buildTime)
@@ -13,9 +13,7 @@ function CurrentTime() {
         }
     })
 
-    return (
-        <span>{time}</span>
-    )
+    return <span>{time}</span>
 }
 
 /**
