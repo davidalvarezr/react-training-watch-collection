@@ -20,19 +20,18 @@ export class WatchService implements IWatchService {
         return [null, "[]"].includes(await this.storageService.getItemAsString(this.watchListLabel))
     }
 
-    async getWatchList(): Promise<Watch[]> {
-        return await this.storageService.getItemAsArray<Watch>(this.watchListLabel)
+    getWatchList(): Promise<Watch[]> {
+        return this.storageService.getItemAsArray<Watch>(this.watchListLabel)
     }
 
-    async setWatchList(watchList: Watch[]): Promise<Watch[]> {
-        await this.storageService.setItem(this.watchListLabel, watchList)
-        return await this.getWatchList()
+    setWatchList(watchList: Watch[]): Promise<Watch[]> {
+        return this.storageService.setItem(this.watchListLabel, watchList)
     }
 
     async addWatch(watch: Watch): Promise<Watch[]> {
         const watchList = await this.getWatchList()
         const newWatchList = [{ ...watch, uuid: uuidv4() }, ...watchList]
-        return await this.setWatchList(newWatchList)
+        return this.setWatchList(newWatchList)
     }
 
     async updateWatch(uuid: string, watch: Watch): Promise<Watch[]> {
@@ -45,7 +44,7 @@ export class WatchService implements IWatchService {
 
     async clearList(): Promise<Watch[]> {
         await this.storageService.removeItem(this.watchListLabel)
-        return await this.storageService.getItemAsArray(this.watchListLabel)
+        return this.storageService.getItemAsArray(this.watchListLabel)
     }
 
     async getWatch(uuid: string): Promise<Watch> {
@@ -56,7 +55,7 @@ export class WatchService implements IWatchService {
     async removeWatch(uuid: string): Promise<Watch[]> {
         const watchList = await this.getWatchList()
         const filteredWatchList = watchList.filter((watch) => watch.uuid !== uuid)
-        return await this.setWatchList(filteredWatchList)
+        return this.setWatchList(filteredWatchList)
     }
 
     async persistWatchesFromCloud(filenameParam: string = null): Promise<Watch[]> {
@@ -65,7 +64,7 @@ export class WatchService implements IWatchService {
                 ? await this.fileService.getFilenameFromCurrentUser()
                 : filenameParam
         const watches = await this.downloadList(filename)
-        return await this.setWatchList(watches)
+        return this.setWatchList(watches)
     }
 
     async sendListOnline(): Promise<Watch[]> {

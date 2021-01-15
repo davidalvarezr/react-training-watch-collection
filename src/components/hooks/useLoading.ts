@@ -31,7 +31,7 @@ export const useLoading: UseLoading = (initVal = false) => {
         setIsLoading(false)
     }
 
-    const errorWhileLoading: ErrorWhileLoading = (error: any) => {
+    const errorWhileLoading: ErrorWhileLoading = (error: unknown) => {
         setIsLoading(false)
         setError(error)
     }

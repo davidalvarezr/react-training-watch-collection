@@ -19,16 +19,13 @@ export const useErrorFormatter: UseErrorFormatter = () => {
             return message as string
         }
         if (message.constructor === arrayConstructor) {
-            return JSON.stringify(message as Array<any>)
+            return JSON.stringify(message as Array<unknown>)
         }
         if (message.constructor === objectConstructor) {
-            return JSON.stringify(message as Object)
+            return JSON.stringify(message as Record<string, unknown>)
         }
         return (
-            "Error is neither a String, Object or Array \n" +
-            message.constructor +
-            "\n" +
-            message
+            "Error is neither a String, Object or Array \n" + message.constructor + "\n" + message
         )
     }
     return [formatError]

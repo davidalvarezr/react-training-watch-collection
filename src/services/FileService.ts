@@ -1,12 +1,12 @@
 import { IFileService } from "~/src/services/IFileService"
 import { ILocalStorageService } from "~/src/services/ILocalStorageService"
-import { UNIQUE_ID } from "~/src/config/labels"
 
 export class FileService implements IFileService {
     /**
      *
      * @param extension the file extension on dropbox
      * @param storage
+     * @param uniqueIdLabel the label under which the unique id of the user will be stored
      */
     constructor(
         private extension: string,
@@ -53,7 +53,7 @@ export class FileService implements IFileService {
     }
 
     async getFilenameFromCurrentUser(extension = this.extension): Promise<string> {
-        const uniqueId = await this.storage.getItemAsString(UNIQUE_ID)
+        const uniqueId = await this.storage.getItemAsString(this.uniqueIdLabel)
         // TODO: test not null
         return this.filenameFromUuid(uniqueId, extension)
     }

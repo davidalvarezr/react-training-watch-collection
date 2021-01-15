@@ -1,6 +1,4 @@
 import { Watch } from "~/src/types/Watch"
-import { DropboxResponse, files } from "dropbox"
-import DownloadError = files.DownloadError
 
 export default interface IWatchService {
     addWatch(watch: Watch): Promise<Watch[]>

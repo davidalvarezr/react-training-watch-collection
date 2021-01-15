@@ -1,5 +1,6 @@
 import { DropboxResponseError } from "dropbox"
 import { DropboxError } from "~/src/config/dropboxConfig"
+import { consoleService } from "~/src/services/container"
 
 /**
  * Throws custom exception according to exception thrown.
@@ -16,8 +17,8 @@ export const fileUploadThrower = (responseError: DropboxResponseError<any>) => {
 
     const { error_summary } = responseError.error
 
-    console.error("Error summary")
-    console.log(error_summary)
+    consoleService.error("Error summary")
+    consoleService.log(error_summary)
 
     switch (error_summary) {
         case "invalid_access_token/":

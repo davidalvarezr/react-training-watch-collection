@@ -3,7 +3,10 @@ import { ILocalStorageService } from "~/src/services/ILocalStorageService"
 export class LocalStorageService implements ILocalStorageService {
     constructor(private storage: Storage) {}
 
-    async setItem<T = object | string | number>(key: string, value: T): Promise<T> {
+    async setItem<T = Record<string, unknown> | string | number>(
+        key: string,
+        value: T
+    ): Promise<T> {
         let finalValue: string
 
         if (["boolean", "number"].includes(typeof value)) {
