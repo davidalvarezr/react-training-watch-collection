@@ -9,7 +9,7 @@ import { MenuHeader } from "~/src/components/blocks/MenuHeader"
 
 const { Content, Footer } = Layout
 
-export const App = () => {
+export const App: React.FC = () => {
     return (
         <BrowserRouter>
             <Layout className="layout">

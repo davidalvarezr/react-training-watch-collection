@@ -1,5 +1,6 @@
 import { IFileService } from "~/src/services/IFileService"
 import { ILocalStorageService } from "~/src/services/ILocalStorageService"
+import { v4 as uuidv4 } from "uuid"
 
 export class FileService implements IFileService {
     /**
@@ -53,8 +54,9 @@ export class FileService implements IFileService {
     }
 
     async getFilenameFromCurrentUser(extension = this.extension): Promise<string> {
-        const uniqueId = await this.storage.getItemAsString(this.uniqueIdLabel)
-        // TODO: test not null
+        const uniqueId =
+            (await this.storage.getItemAsString(this.uniqueIdLabel)) ??
+            (await this.storage.setItem<string>(this.uniqueIdLabel, uuidv4()))
         return this.filenameFromUuid(uniqueId, extension)
     }
 

@@ -1,40 +1,16 @@
-import React, { ChangeEvent, Fragment, useEffect, useState } from "react"
-import { useLocation } from "react-router-dom"
+import React from "react"
 import { useWatchService } from "~/src/components/hooks/useWatchService"
 import { useLoading } from "~/src/components/hooks/useLoading"
 import { ErrorDisplayer } from "~/src/components/blocks/ErrorDisplayer"
 import { useErrorMapper } from "~/src/components/hooks/useErrorMapper"
-import { UNIQUE_ID } from "~/src/config/labels"
-import { useLocalStorageService } from "~/src/components/hooks/useLocalStorageService"
-import { v4 as uuidv4 } from "uuid"
-import { useConsoleService } from "~/src/components/hooks/useConsoleService"
+import { useUniqueId } from "~/src/components/hooks/useUniqueId"
+import { DownloadWatch } from "~/src/components/blocks/DownloadWatch"
 
-export const SettingsPage = () => {
+export const SettingsPage: React.FC = () => {
     const watchService = useWatchService()
-    const storage = useLocalStorageService()
-    const consoleService = useConsoleService()
 
     // Will get the unique id stored in the local storage
-    const [uniqueId, setUniqueId] = useState<string>(null)
-
-    // The current value of the input
-    const [downloadCode, setDownloadCode] = useState<string>(uniqueId)
-
-    useEffect(() => {
-        consoleService.log("in SettingPage useEffect")
-        const loadUniqueId = async () => {
-            consoleService.log("in loadUniqueId")
-            let id = await storage.getItemAsString(UNIQUE_ID)
-            if (id === null) {
-                id = uuidv4()
-                await storage.setItem(UNIQUE_ID, id)
-            }
-            setUniqueId(id)
-            setDownloadCode(id)
-        }
-
-        loadUniqueId()
-    }, [])
+    const [uniqueId, isUniqueIdLoading] = useUniqueId()
 
     const [isUploading, errorUpload, beginUpload, endUpload, errorWhileUploading] = useLoading(
         false
@@ -58,7 +34,7 @@ export const SettingsPage = () => {
         endUpload()
     }
 
-    const downloadWatches = async () => {
+    const downloadWatches = async (downloadCode: string) => {
         if (
             !(await watchService.isWatchListEmpty()) &&
             !confirm(
@@ -74,10 +50,6 @@ export const SettingsPage = () => {
             errorWhileDownloading(msgFromError(e))
         }
         endDownload()
-    }
-
-    const handleInput = (e: ChangeEvent<HTMLInputElement>) => {
-        setDownloadCode(e.target.value)
     }
 
     return (
@@ -99,20 +71,7 @@ export const SettingsPage = () => {
             {/*DOWNLOAD ---------------------------------------------------------------------------------------------*/}
 
             {!isDownloading ? (
-                downloadCode !== null ? (
-                    <Fragment>
-                        <button onClick={downloadWatches}>download</button>
-                        <input
-                            type="text"
-                            placeholder="code"
-                            onChange={handleInput}
-                            value={downloadCode}
-                            style={{ width: "300px", maxWidth: "100%" }}
-                        />
-                    </Fragment>
-                ) : (
-                    <p>waiting for code...</p>
-                )
+                !isUniqueIdLoading && <DownloadWatch id={uniqueId} onDownload={downloadWatches} />
             ) : (
                 <p>Your file is downloading...</p>
             )}

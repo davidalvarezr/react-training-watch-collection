@@ -7,7 +7,7 @@ import { Layout, Menu } from "antd"
 const { Header } = Layout
 const { Item } = Menu
 
-export const MenuHeader = () => {
+export const MenuHeader: React.FC = () => {
     const { pathname } = useLocation()
 
     return (
