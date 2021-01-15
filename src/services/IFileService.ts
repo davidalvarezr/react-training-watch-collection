@@ -11,4 +11,6 @@ export interface IFileService {
     fileUrl(file: File): string
 
     getFilenameFromCurrentUser(extension?: string): Promise<string>
+
+    filenameFromUuid(uuid: string, extension?: string): string
 }

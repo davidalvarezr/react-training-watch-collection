@@ -11,4 +11,4 @@ export enum DropboxError {
     FILE_TOO_BIG = "FILE_TOO_BIG",
 }
 
-consoleService.log("access token: ", dropboxConfig.ACCESS_TOKEN)
+// consoleService.log("access token: ", dropboxConfig.ACCESS_TOKEN)

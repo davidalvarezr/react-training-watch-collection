@@ -19,11 +19,7 @@ function WatchDetailPage() {
         fillStateFromStorage()
     }, [])
 
-    return (
-        <div>
-            <WatchItem watch={watch} mode={Mode.EDIT} />
-        </div>
-    )
+    return <div>{watch && <WatchItem watch={watch} mode={Mode.EDIT} />}</div>
 }
 
 export default WatchDetailPage

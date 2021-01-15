@@ -58,7 +58,7 @@ export class FileService implements IFileService {
         return this.filenameFromUuid(uniqueId, extension)
     }
 
-    private filenameFromUuid(uuid: string, extension = this.extension): string {
+    filenameFromUuid(uuid: string, extension = this.extension): string {
         return `${uuid}${extension}`
     }
 }

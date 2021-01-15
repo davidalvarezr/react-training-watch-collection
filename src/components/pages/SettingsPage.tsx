@@ -7,26 +7,34 @@ import { useErrorMapper } from "~/src/components/hooks/useErrorMapper"
 import { UNIQUE_ID } from "~/src/config/labels"
 import { useLocalStorageService } from "~/src/components/hooks/useLocalStorageService"
 import { v4 as uuidv4 } from "uuid"
+import { useConsoleService } from "~/src/components/hooks/useConsoleService"
 
 export const SettingsPage = () => {
     const watchService = useWatchService()
     const storage = useLocalStorageService()
+    const consoleService = useConsoleService()
+
+    // Will get the unique id stored in the local storage
     const [uniqueId, setUniqueId] = useState<string>(null)
 
+    // The current value of the input
+    const [downloadCode, setDownloadCode] = useState<string>(uniqueId)
+
     useEffect(() => {
+        consoleService.log("in SettingPage useEffect")
         const loadUniqueId = async () => {
-            const id = await storage.getItemAsString(UNIQUE_ID)
+            consoleService.log("in loadUniqueId")
+            let id = await storage.getItemAsString(UNIQUE_ID)
             if (id === null) {
-                const newId = uuidv4()
-                setUniqueId(newId)
-                storage.setItem(UNIQUE_ID, id)
-            } else {
-                setUniqueId(id)
+                id = uuidv4()
+                await storage.setItem(UNIQUE_ID, id)
             }
+            setUniqueId(id)
+            setDownloadCode(id)
         }
 
         loadUniqueId()
-    })
+    }, [])
 
     const [isUploading, errorUpload, beginUpload, endUpload, errorWhileUploading] = useLoading(
         false
@@ -61,7 +69,7 @@ export const SettingsPage = () => {
         }
         beginDownload()
         try {
-            await watchService.persistWatchesFromCloud()
+            await watchService.persistWatchesFromCloud(downloadCode)
         } catch (e) {
             errorWhileDownloading(msgFromError(e))
         }
@@ -91,14 +99,14 @@ export const SettingsPage = () => {
             {/*DOWNLOAD ---------------------------------------------------------------------------------------------*/}
 
             {!isDownloading ? (
-                uniqueId !== null ? (
+                downloadCode !== null ? (
                     <Fragment>
                         <button onClick={downloadWatches}>download</button>
                         <input
                             type="text"
                             placeholder="code"
                             onChange={handleInput}
-                            value={uniqueId}
+                            value={downloadCode}
                             style={{ width: "300px", maxWidth: "100%" }}
                         />
                     </Fragment>

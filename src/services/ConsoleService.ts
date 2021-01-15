@@ -6,12 +6,12 @@ export class ConsoleService implements IConsoleService {
     log(...data: unknown[]): void {
         if (!this.enabled) return
         // eslint-disable-next-line no-console
-        console.log(data)
+        console.log(...data)
     }
 
     error(...data: unknown[]): void {
         if (!this.enabled) return
         // eslint-disable-next-line no-console
-        console.error(data)
+        console.error(...data)
     }
 }

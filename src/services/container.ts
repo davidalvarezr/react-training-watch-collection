@@ -9,9 +9,10 @@ import { ConsoleService } from "~/src/services/ConsoleService"
 const DIRECTORY = "/"
 const EXTENSION = ".json"
 
+export const consoleService = new ConsoleService()
+
 const dbx = new Dropbox({ accessToken: dropboxConfig.ACCESS_TOKEN })
 
-export const consoleService = new ConsoleService()
 export const storageService = new LocalStorageService(localStorage)
 export const fileService = new FileService(EXTENSION, storageService, UNIQUE_ID)
 export const watchService = new WatchService(

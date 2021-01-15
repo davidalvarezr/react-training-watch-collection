@@ -5,6 +5,7 @@ import { useWatchService } from "~/src/components/hooks/useWatchService"
 import { useFileService } from "~/src/components/hooks/useFileService"
 import { ImageSelector } from "~/src/components/blocks/ImageSelector"
 import { links } from "~/src/config/links"
+import { useConsoleService } from "~/src/components/hooks/useConsoleService"
 
 interface PropsType {
     watch?: Watch
@@ -16,12 +17,12 @@ const initialFormState: Watch = {
     model: "",
     description: "",
     priceBought: "",
-    image: null,
 }
 
 export const WatchForm = ({ watch }: PropsType) => {
     const watchService = useWatchService()
     const fileService = useFileService()
+    const consoleService = useConsoleService()
     const history = useHistory()
     const [state, setState] = useState<Watch>(watch ?? initialFormState)
 
@@ -38,7 +39,7 @@ export const WatchForm = ({ watch }: PropsType) => {
     }
 
     const addWatch = () => {
-        console.log("Adding this watch to the collection: ", state)
+        consoleService.log("Adding this watch to the collection: ", state)
         watchService.addWatch(state)
         setState(initialFormState)
         history.push(links.watchCollection())

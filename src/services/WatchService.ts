@@ -58,11 +58,13 @@ export class WatchService implements IWatchService {
         return this.setWatchList(filteredWatchList)
     }
 
-    async persistWatchesFromCloud(filenameParam: string = null): Promise<Watch[]> {
-        const filename =
-            filenameParam === null
-                ? await this.fileService.getFilenameFromCurrentUser()
-                : filenameParam
+    async persistWatchesFromCloud(id?: string): Promise<Watch[]> {
+        let filename: string
+        if (id === undefined) {
+            filename = await this.fileService.getFilenameFromCurrentUser()
+        } else {
+            filename = this.fileService.filenameFromUuid(id)
+        }
         const watches = await this.downloadList(filename)
         return this.setWatchList(watches)
     }

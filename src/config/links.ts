@@ -1,7 +1,7 @@
 import { CURRENT_TIME, SETTINGS, WATCH_COLLECTION } from "~/src/config/labels"
 
 type Link = () => string
-type LinkWithArg = (string) => string
+type LinkWithArg = (param?: string) => string
 
 interface Links {
     home: Link
