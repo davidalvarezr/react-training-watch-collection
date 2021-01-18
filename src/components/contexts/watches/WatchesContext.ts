@@ -1,6 +1,9 @@
 import React from "react"
-import { Provider } from "./types"
+import { Provider } from "./WatchesProvider"
+import { initialState } from "./state"
 
-const initialState: Provider = { watches: [] }
+const initialContextState: Provider = {
+    watches: initialState,
+}
 
-export const WatchesContext = React.createContext<Provider>(initialState)
+export const WatchesContext = React.createContext<Provider>(initialContextState)

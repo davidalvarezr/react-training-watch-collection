@@ -1,15 +1,23 @@
-import React from "react"
-import { BrowserRouter, Link } from "react-router-dom"
+import React, { useContext, useEffect } from "react"
+import { BrowserRouter } from "react-router-dom"
 import { Layout } from "antd"
 import "antd/dist/antd.css"
 import "../index.css"
 import { Routing } from "~/src/components/Routing"
 import { routes } from "~/src/config/routes"
 import { MenuHeader } from "~/src/components/blocks/MenuHeader"
+import { WatchesContext } from "~/src/components/contexts/watches/WatchesContext"
+import { WatchesAction } from "~/src/components/contexts/watches/actions"
 
 const { Content, Footer } = Layout
 
 export const App: React.FC = () => {
+    const { dispatch } = useContext(WatchesContext)
+
+    useEffect(() => {
+        dispatch({ type: WatchesAction.LOAD_FROM_LOCAL_STORAGE })
+    }, [])
+
     return (
         <BrowserRouter>
             <Layout className="layout">

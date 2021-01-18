@@ -1,5 +1,6 @@
 import React, { PropsWithChildren, ReactNode } from "react"
 import { ErrorDisplayer, ErrorMessage } from "~/src/components/blocks/ErrorDisplayer"
+import { LoadingOutlined } from "@ant-design/icons"
 
 type LoadingComponentProps = { message?: string }
 
@@ -12,16 +13,22 @@ const LoadingComponent: React.FC<LoadingComponentProps> = (props: LoadingCompone
     return <div>{message}</div>
 }
 
+const DefaultLoadingComponent = () => {
+    return <LoadingOutlined style={{ fontSize: "32px" }} />
+}
+
 type PropTypes = PropsWithChildren<{
     isLoading: boolean
     loadingComponent?: ReactNode
     loadingMessage?: string
     errorMessage?: ErrorMessage
+    noLoadingAnimation?: boolean
 }>
 
 const defaultProps: PropTypes = {
     isLoading: false,
     loadingMessage: "Loading...",
+    noLoadingAnimation: false,
 }
 
 /**
@@ -31,20 +38,34 @@ const defaultProps: PropTypes = {
  * @constructor
  */
 export const LoadWrapper: React.FC<PropTypes> = (props: PropTypes) => {
-    const { isLoading, loadingComponent, loadingMessage, errorMessage, children } = {
+    const {
+        isLoading,
+        loadingComponent,
+        loadingMessage,
+        errorMessage,
+        noLoadingAnimation,
+        children,
+    } = {
         ...defaultProps,
         ...props,
     }
 
     if (isLoading) {
-        if (loadingComponent)
+        if (loadingComponent) {
             return (
                 <div>
                     {loadingComponent}
                     <LoadingComponent message={loadingMessage} />
                 </div>
             )
-        else return <LoadingComponent message={loadingMessage} />
+        } else {
+            return (
+                <div>
+                    {!noLoadingAnimation && <DefaultLoadingComponent />}
+                    <LoadingComponent message={loadingMessage} />
+                </div>
+            )
+        }
     } else
         return (
             <div>

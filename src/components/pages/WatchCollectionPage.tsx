@@ -1,47 +1,42 @@
-import React, { useEffect, useState } from "react"
+import React, { useContext, useEffect, useState } from "react"
 import { Link } from "react-router-dom"
 import { Button, Space } from "antd"
 import { WatchList } from "~/src/components/blocks/WatchList"
-import { useWatchService } from "~/src/components/hooks/useWatchService"
-import { Watch } from "~/src/types/Watch"
 import { links } from "~/src/config/links"
-import { WatchesProvider } from "~/src/components/contexts/watches/WatchesProvider"
+import { WatchesContext } from "~/src/components/contexts/watches/WatchesContext"
+import { WatchesAction } from "~/src/components/contexts/watches/actions"
+import { LoadWrapper } from "~/src/components/blocks/LoadWrapper"
 
-export const WatchCollectionPage = () => {
-    const watchService = useWatchService()
-    const [watches, setWatches] = useState<Watch[]>([])
-
-    useEffect(() => {
-        const fillStateFromStorage = async () => {
-            setWatches(await watchService.getWatchList())
-        }
-        fillStateFromStorage()
-    }, [])
+export const WatchCollectionPage: React.FC = () => {
+    const {
+        watches: { watches, localStorageRetrieveLoading },
+        dispatch,
+    } = useContext(WatchesContext)
 
     const clearList = async () => {
         if (confirm("Do you really want to clear your list of watches ?")) {
-            setWatches(await watchService.clearList())
+            dispatch({ type: WatchesAction.CLEAR_LIST })
         }
     }
 
     return (
-        <WatchesProvider>
+        <div>
+            <Space>
+                <Button type="primary">
+                    <Link to={links.watchAdd()}>Add a watch</Link>
+                </Button>
+                <Button type="primary" danger onClick={clearList}>
+                    Clear the list
+                </Button>
+            </Space>
+
+            <div style={{ height: "10px" }} />
+
             <div>
-                <Space>
-                    <Button type="primary">
-                        <Link to={links.watchAdd()}>Add a watch</Link>
-                    </Button>
-                    <Button type="primary" danger onClick={clearList}>
-                        Clear the list
-                    </Button>
-                </Space>
-
-                <div style={{ height: "10px" }} />
-
-                <div>
+                <LoadWrapper isLoading={localStorageRetrieveLoading}>
                     <WatchList watches={watches} />
-                </div>
+                </LoadWrapper>
             </div>
-        </WatchesProvider>
+        </div>
     )
 }
