@@ -3,7 +3,7 @@ import { useErrorFormatter } from "~/src/components/hooks/useErrorFormatter"
 
 // FIXME: is it a good way to create a default props ?
 
-export type ErrorMessage = string | Object | Array<any>
+export type ErrorMessage = string | Record<string, unknown> | Array<any>
 
 type PropTypes = {
     message: ErrorMessage

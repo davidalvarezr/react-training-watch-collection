@@ -1,10 +1,12 @@
-import React from "react"
+import React, { useEffect, useState } from "react"
 import { useWatchService } from "~/src/components/hooks/useWatchService"
 import { useLoading } from "~/src/components/hooks/useLoading"
 import { ErrorDisplayer } from "~/src/components/blocks/ErrorDisplayer"
 import { useErrorMapper } from "~/src/components/hooks/useErrorMapper"
 import { useUniqueId } from "~/src/components/hooks/useUniqueId"
 import { DownloadWatch } from "~/src/components/blocks/DownloadWatch"
+import { LoadWrapper } from "~/src/components/blocks/LoadWrapper"
+import { LoadingOutlined } from "@ant-design/icons"
 
 export const SettingsPage: React.FC = () => {
     const watchService = useWatchService()
@@ -58,25 +60,27 @@ export const SettingsPage: React.FC = () => {
 
             {/*UPLOAD -----------------------------------------------------------------------------------------------*/}
 
-            {!isUploading ? (
+            <LoadWrapper
+                isLoading={isUploading}
+                loadingComponent={<LoadingOutlined style={{ fontSize: "32px" }} />}
+                loadingMessage="Uploading watches..."
+                errorMessage={errorUpload}
+            >
                 <button onClick={uploadWatches}>upload</button>
-            ) : (
-                <p>Your file is uploading...</p>
-            )}
-
-            {errorUpload && <ErrorDisplayer message={errorUpload} />}
+            </LoadWrapper>
 
             <br />
 
             {/*DOWNLOAD ---------------------------------------------------------------------------------------------*/}
 
-            {!isDownloading ? (
-                !isUniqueIdLoading && <DownloadWatch id={uniqueId} onDownload={downloadWatches} />
-            ) : (
-                <p>Your file is downloading...</p>
-            )}
-
-            {errorDownload && <ErrorDisplayer message={errorDownload} />}
+            <LoadWrapper
+                isLoading={isDownloading || uniqueId === null}
+                loadingComponent={<LoadingOutlined style={{ fontSize: "32px" }} />}
+                loadingMessage="Downloading watches..."
+                errorMessage={errorDownload}
+            >
+                <DownloadWatch id={uniqueId} onDownload={downloadWatches} />
+            </LoadWrapper>
         </div>
     )
 }
