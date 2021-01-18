@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useEffect, useMemo, useState } from "react"
 import { UNIQUE_ID } from "~/src/config/labels"
 import { useConsoleService } from "~/src/components/hooks/useConsoleService"
 import { useLocalStorageService } from "~/src/components/hooks/useLocalStorageService"
@@ -29,7 +29,7 @@ export const useUniqueId: UseUniqueId = () => {
         }
 
         loadUniqueId()
-    }, [])
+    }, [uniqueId])
 
     return [uniqueId, isLoading]
 }

@@ -1,85 +1,70 @@
 import React, { useEffect, useState } from "react"
-import { useWatchService } from "~/src/components/hooks/useWatchService"
-import { useLoading } from "~/src/components/hooks/useLoading"
-import { ErrorDisplayer } from "~/src/components/blocks/ErrorDisplayer"
-import { useErrorMapper } from "~/src/components/hooks/useErrorMapper"
 import { useUniqueId } from "~/src/components/hooks/useUniqueId"
 import { DownloadWatch } from "~/src/components/blocks/DownloadWatch"
 import { LoadWrapper } from "~/src/components/blocks/LoadWrapper"
 import { LoadingOutlined } from "@ant-design/icons"
+import { useUploadWatches, UploadWatchesState } from "~/src/components/hooks/watch/useUploadWatches"
+import {
+    DownloadWatchesState,
+    useDownloadWatches,
+} from "~/src/components/hooks/watch/useDownloadWatches"
 
 export const SettingsPage: React.FC = () => {
-    const watchService = useWatchService()
+    // Unique ID state and effect ---------------
+    const [uniqueId] = useUniqueId()
+    const [downloadInput, setDownloadInput] = useState(uniqueId)
+    useEffect(() => {
+        setDownloadInput(uniqueId)
+    }, [uniqueId])
 
-    // Will get the unique id stored in the local storage
-    const [uniqueId, isUniqueIdLoading] = useUniqueId()
+    // Upload state, behaviour and effect --------
+    const [{ isUploading, uploadError }, setUploadState] = useState<UploadWatchesState>({
+        isUploading: false,
+    })
+    const [uploadState, uploadWatches] = useUploadWatches()
+    useEffect(() => {
+        setUploadState(uploadState)
+    }, [uploadState])
 
-    const [isUploading, errorUpload, beginUpload, endUpload, errorWhileUploading] = useLoading(
-        false
-    )
-    const [
-        isDownloading,
-        errorDownload,
-        beginDownload,
-        endDownload,
-        errorWhileDownloading,
-    ] = useLoading(false)
-    const [msgFromError] = useErrorMapper()
-
-    const uploadWatches = async () => {
-        beginUpload()
-        try {
-            await watchService.sendListOnline()
-        } catch (e) {
-            errorWhileUploading(msgFromError(e))
-        }
-        endUpload()
-    }
-
-    const downloadWatches = async (downloadCode: string) => {
-        if (
-            !(await watchService.isWatchListEmpty()) &&
-            !confirm(
-                "Downloading your list from the cloud will erase the one you actually have in the app"
-            )
-        ) {
-            return
-        }
-        beginDownload()
-        try {
-            await watchService.persistWatchesFromCloud(downloadCode)
-        } catch (e) {
-            errorWhileDownloading(msgFromError(e))
-        }
-        endDownload()
-    }
+    // Download state, behaviour and effect -----
+    const [{ isDownloading, downloadError }, setDownloadState] = useState<DownloadWatchesState>({
+        isDownloading: false,
+    })
+    const [downloadState, downloadWatches] = useDownloadWatches()
+    useEffect(() => {
+        setDownloadState(downloadState)
+    }, [downloadState])
 
     return (
         <div>
             <p>Your code: {uniqueId}</p>
 
-            {/*UPLOAD -----------------------------------------------------------------------------------------------*/}
+            {/*UPLOAD -------------------------------------------------------*/}
 
             <LoadWrapper
                 isLoading={isUploading}
                 loadingComponent={<LoadingOutlined style={{ fontSize: "32px" }} />}
                 loadingMessage="Uploading watches..."
-                errorMessage={errorUpload}
+                errorMessage={uploadError}
             >
                 <button onClick={uploadWatches}>upload</button>
             </LoadWrapper>
 
             <br />
 
-            {/*DOWNLOAD ---------------------------------------------------------------------------------------------*/}
+            {/*DOWNLOAD -----------------------------------------------------*/}
 
             <LoadWrapper
-                isLoading={isDownloading || uniqueId === null}
+                isLoading={isDownloading || downloadInput === null}
                 loadingComponent={<LoadingOutlined style={{ fontSize: "32px" }} />}
                 loadingMessage="Downloading watches..."
-                errorMessage={errorDownload}
+                errorMessage={downloadError}
             >
-                <DownloadWatch id={uniqueId} onDownload={downloadWatches} />
+                <DownloadWatch
+                    id={downloadInput}
+                    onDownload={downloadWatches}
+                    onChange={setDownloadInput}
+                />
             </LoadWrapper>
         </div>
     )

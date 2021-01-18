@@ -1,12 +1,19 @@
-import React, { Fragment, useState } from "react"
+import React, { ChangeEvent, Fragment, useState } from "react"
 
 type PropTypes = {
     id: string
     onDownload: (id: string) => void
+    onChange?: (id: string) => void
 }
 
-export const DownloadWatch: React.FC<PropTypes> = ({ id, onDownload }: PropTypes) => {
+export const DownloadWatch: React.FC<PropTypes> = ({ id, onDownload, onChange }: PropTypes) => {
     const [inputValue, setInputValue] = useState<string>(id)
+
+    const onDownloadInputChange = (event: ChangeEvent<HTMLInputElement>) => {
+        const { value } = event.target
+        setInputValue(value)
+        if (onChange) onChange(value)
+    }
 
     return (
         <Fragment>
@@ -14,7 +21,7 @@ export const DownloadWatch: React.FC<PropTypes> = ({ id, onDownload }: PropTypes
             <input
                 type="text"
                 placeholder="code"
-                onChange={(evt) => setInputValue(evt.target.value)}
+                onChange={onDownloadInputChange}
                 value={inputValue}
                 style={{ width: "300px", maxWidth: "100%" }}
             />
