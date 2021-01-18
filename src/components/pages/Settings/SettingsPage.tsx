@@ -3,11 +3,14 @@ import { useUniqueId } from "~/src/components/hooks/useUniqueId"
 import { DownloadWatch } from "~/src/components/blocks/DownloadWatch"
 import { LoadWrapper } from "~/src/components/blocks/LoadWrapper"
 import { LoadingOutlined } from "@ant-design/icons"
-import { useUploadWatches, UploadWatchesState } from "~/src/components/hooks/watch/useUploadWatches"
+import {
+    useUploadWatches,
+    UploadWatchesState,
+} from "~/src/components/pages/Settings/useUploadWatches"
 import {
     DownloadWatchesState,
     useDownloadWatches,
-} from "~/src/components/hooks/watch/useDownloadWatches"
+} from "~/src/components/pages/Settings/useDownloadWatches"
 
 export const SettingsPage: React.FC = () => {
     // Unique ID state and effect ---------------
@@ -49,8 +52,6 @@ export const SettingsPage: React.FC = () => {
             >
                 <button onClick={uploadWatches}>upload</button>
             </LoadWrapper>
-
-            <br />
 
             {/*DOWNLOAD -----------------------------------------------------*/}
 
