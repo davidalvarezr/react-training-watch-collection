@@ -6,6 +6,7 @@ import { links } from "~/src/config/links"
 import { WatchesContext } from "~/src/components/contexts/watches/WatchesContext"
 import { WatchesAction } from "~/src/components/contexts/watches/actions"
 import { LoadWrapper } from "~/src/components/blocks/LoadWrapper"
+import { VerticalSpace } from "~/src/components/blocks/VerticalSpace"
 
 export const WatchCollectionPage: React.FC = () => {
     const {
@@ -30,7 +31,7 @@ export const WatchCollectionPage: React.FC = () => {
                 </Button>
             </Space>
 
-            <div style={{ height: "10px" }} />
+            <VerticalSpace height="10px" />
 
             <div>
                 <LoadWrapper isLoading={localStorageRetrieveLoading}>
