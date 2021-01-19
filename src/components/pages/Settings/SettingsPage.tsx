@@ -1,18 +1,17 @@
-import React, { useEffect, useState } from "react"
+import React, { useContext, useEffect, useState } from "react"
 import { useUniqueId } from "~/src/components/hooks/useUniqueId"
 import { DownloadWatch } from "~/src/components/blocks/DownloadWatch"
 import { LoadWrapper } from "~/src/components/blocks/LoadWrapper"
 import { LoadingOutlined } from "@ant-design/icons"
-import {
-    useUploadWatches,
-    UploadWatchesState,
-} from "~/src/components/pages/Settings/useUploadWatches"
-import {
-    DownloadWatchesState,
-    useDownloadWatches,
-} from "~/src/components/pages/Settings/useDownloadWatches"
+import { WatchesContext } from "~/src/components/contexts/watches/WatchesContext"
+import { WatchesAction } from "~/src/components/contexts/watches/actions"
 
 export const SettingsPage: React.FC = () => {
+    const {
+        watches: { uploading, uploadError, downloading, downloadError },
+        dispatch,
+    } = useContext(WatchesContext)
+
     // Unique ID state and effect ---------------
     const [uniqueId] = useUniqueId()
     const [downloadInput, setDownloadInput] = useState(uniqueId)
@@ -20,23 +19,15 @@ export const SettingsPage: React.FC = () => {
         setDownloadInput(uniqueId)
     }, [uniqueId])
 
-    // Upload state, behaviour and effect --------
-    const [{ isUploading, uploadError }, setUploadState] = useState<UploadWatchesState>({
-        isUploading: false,
-    })
-    const [uploadState, uploadWatches] = useUploadWatches()
-    useEffect(() => {
-        setUploadState(uploadState)
-    }, [uploadState])
+    const upload = () => {
+        dispatch({ type: WatchesAction.UPLOAD })
+    }
 
-    // Download state, behaviour and effect -----
-    const [{ isDownloading, downloadError }, setDownloadState] = useState<DownloadWatchesState>({
-        isDownloading: false,
-    })
-    const [downloadState, downloadWatches] = useDownloadWatches()
-    useEffect(() => {
-        setDownloadState(downloadState)
-    }, [downloadState])
+    const download = (id: string) => {
+        console.log("doewnloadInput", downloadInput)
+        console.log("id", id)
+        dispatch({ type: WatchesAction.DOWNLOAD, payload: id })
+    }
 
     return (
         <div>
@@ -45,25 +36,25 @@ export const SettingsPage: React.FC = () => {
             {/*UPLOAD -------------------------------------------------------*/}
 
             <LoadWrapper
-                isLoading={isUploading}
+                isLoading={uploading}
                 loadingComponent={<LoadingOutlined style={{ fontSize: "32px" }} />}
                 loadingMessage="Uploading watches..."
                 errorMessage={uploadError}
             >
-                <button onClick={uploadWatches}>upload</button>
+                <button onClick={upload}>upload</button>
             </LoadWrapper>
 
             {/*DOWNLOAD -----------------------------------------------------*/}
 
             <LoadWrapper
-                isLoading={isDownloading || downloadInput === null}
+                isLoading={downloading || downloadInput === null}
                 loadingComponent={<LoadingOutlined style={{ fontSize: "32px" }} />}
                 loadingMessage="Downloading watches..."
                 errorMessage={downloadError}
             >
                 <DownloadWatch
                     id={downloadInput}
-                    onDownload={downloadWatches}
+                    onDownload={download}
                     onChange={setDownloadInput}
                 />
             </LoadWrapper>

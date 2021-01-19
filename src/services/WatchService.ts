@@ -77,17 +77,13 @@ export class WatchService implements IWatchService {
     }
 
     private async downloadList(filename: string): Promise<Watch[]> {
-        try {
-            const { result } = await this.dbx.filesDownload({
-                path: `${this.directory}${filename}`,
-            })
-            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-            // @ts-ignore -- return type seems not compatible with what it is actually returned...
-            const fileAsString = await (result.fileBlob as Blob).text()
-            return JSON.parse(fileAsString)
-        } catch (e) {
-            fileDownloadThrower(e)
-        }
+        const { result } = await this.dbx.filesDownload({
+            path: `${this.directory}${filename}`,
+        })
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore -- return type seems not compatible with what it is actually returned...
+        const fileAsString = await (result.fileBlob as Blob).text()
+        return JSON.parse(fileAsString)
     }
 
     /**
@@ -101,17 +97,14 @@ export class WatchService implements IWatchService {
         watches: Watch[],
         filename: string
     ): Promise<DropboxResponse<files.FileMetadata>> {
-        try {
-            const blob = new Blob([JSON.stringify(watches)], {
-                type: "octet/stream",
-            })
-            return await this.dbx.filesUpload({
-                path: `${this.directory}${filename}`,
-                contents: blob,
-                mode: { ".tag": "overwrite" },
-            })
-        } catch (e) {
-            fileUploadThrower(e)
-        }
+        console.log("watches", watches)
+        const blob = new Blob([JSON.stringify(watches)], {
+            type: "octet/stream",
+        })
+        return await this.dbx.filesUpload({
+            path: `${this.directory}${filename}`,
+            contents: blob,
+            mode: { ".tag": "overwrite" },
+        })
     }
 }

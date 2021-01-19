@@ -1,5 +1,5 @@
 export type Watch = {
-    uuid: string
+    uuid?: string
     brand: string
     model: string
     description: string

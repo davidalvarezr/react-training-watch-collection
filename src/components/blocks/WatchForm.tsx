@@ -1,53 +1,65 @@
 import React, { useMemo, useState } from "react"
 import { Watch } from "~/src/types/Watch"
-import { useHistory } from "react-router-dom"
-import { useWatchService } from "~/src/components/hooks/useWatchService"
 import { useFileService } from "~/src/components/hooks/useFileService"
 import { ImageSelector } from "~/src/components/blocks/ImageSelector"
-import { links } from "~/src/config/links"
 import { useConsoleService } from "~/src/components/hooks/useConsoleService"
+import { Mode } from "~/src/types/Mode"
 
-interface PropsType {
+interface PropTypes {
     watch?: Watch
+    addWatch?: (watch: Watch) => void
+    updateWatch?: (payload: { uuid: string; watch: Watch }) => void
 }
 
 const initialFormState: Watch = {
-    uuid: null,
     brand: "",
     model: "",
     description: "",
     priceBought: "",
 }
 
-export const WatchForm = ({ watch }: PropsType) => {
-    const watchService = useWatchService()
+/**
+ * @param watch shouldn't change over time
+ * @param addWatch
+ * @param updateWatch
+ * @constructor
+ */
+const WatchForm: React.FC<PropTypes> = ({ watch, addWatch, updateWatch }: PropTypes) => {
+    let mode: Mode
+    if (watch) {
+        mode = Mode.EDIT
+    } else {
+        mode = Mode.ADD
+        watch = initialFormState
+    }
+
     const fileService = useFileService()
     const consoleService = useConsoleService()
-    const history = useHistory()
-    const [state, setState] = useState<Watch>(watch ?? initialFormState)
+
+    // The state of the form
+    const [state, setState] = useState<Watch>(watch)
 
     // Memo prevents the expensive calculation when we type in a field (which causes a render)
     const image = useMemo(() => fileService.dataUrlToFileObject(state.image, "watch"), [
         state.image,
     ])
 
-    const updateState = (key: keyof typeof initialFormState, value: string) => {
+    // useEffect(() => {
+    //     consoleService.log("WatchForm mount")
+    //     return () => {
+    //         consoleService.log("WatchForm unmount")
+    //     }
+    // }, [])
+    // useEffect(() => {
+    //     consoleService.log("WatchForm after render")
+    // })
+
+    // handler method for the text inputs
+    const updateState = (key: keyof Watch, value: string) => {
         setState({
             ...state,
             ...{ [key]: value },
         })
-    }
-
-    const addWatch = () => {
-        consoleService.log("Adding this watch to the collection: ", state)
-        watchService.addWatch(state)
-        setState(initialFormState)
-        history.push(links.watchCollection())
-    }
-
-    const updateWatch = () => {
-        watchService.updateWatch(watch.uuid, state)
-        history.push(links.watchCollection())
     }
 
     const onImageChange = async (file) => {
@@ -109,7 +121,17 @@ export const WatchForm = ({ watch }: PropsType) => {
 
             <br />
             <br />
-            <button onClick={() => (watch ? updateWatch() : addWatch())}>Submit</button>
+            <button
+                onClick={() =>
+                    mode === Mode.EDIT
+                        ? updateWatch({ watch: state, uuid: watch.uuid })
+                        : addWatch(state)
+                }
+            >
+                Submit
+            </button>
         </div>
     )
 }
+// WatchForm.whyDidYouRender = true
+export { WatchForm }

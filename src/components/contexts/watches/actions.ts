@@ -1,5 +1,6 @@
 import { Watch } from "~/src/types/Watch"
 import { ErrorMessage } from "~/src/components/blocks/ErrorDisplayer"
+import { DropboxResponseError } from "dropbox"
 
 export enum WatchesAction {
     ADD_WATCH = "ADD_WATCH",
@@ -19,10 +20,6 @@ export enum WatchesAction {
 
 interface Action {
     type: WatchesAction
-}
-
-interface ActionFailure extends Action {
-    payload: ErrorMessage
 }
 
 interface AddWatch extends Action {
@@ -56,21 +53,22 @@ interface LoadFromLocalStorageSuccess extends Action {
     payload: Watch[]
 }
 
-interface LoadFromLocalStorageFailure extends ActionFailure {
+interface LoadFromLocalStorageFailure extends Action {
     type: WatchesAction.LOAD_FROM_LOCAL_STORAGE_FAILURE
+    payload: ErrorMessage
 }
 
 interface Upload extends Action {
     type: WatchesAction.UPLOAD
-    payload: Watch[]
 }
 
 interface UploadSuccess extends Action {
     type: WatchesAction.UPLOAD_SUCCESS
 }
 
-interface UploadFailure extends ActionFailure {
+interface UploadFailure extends Action {
     type: WatchesAction.UPLOAD_FAILURE
+    payload: any
 }
 
 interface Download extends Action {
@@ -83,8 +81,9 @@ interface DownloadSuccess extends Action {
     payload: Watch[]
 }
 
-interface DownloadFailure extends ActionFailure {
+interface DownloadFailure extends Action {
     type: WatchesAction.DOWNLOAD_FAILURE
+    payload: any
 }
 
 export type WatchAction =

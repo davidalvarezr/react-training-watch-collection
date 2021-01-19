@@ -4,7 +4,7 @@ import { FunctionComponent } from "react"
 import { WatchCollectionPage } from "~/src/components/pages/WatchCollectionPage"
 import { WatchFormPage } from "~/src/components/pages/WatchFormPage"
 import WatchDetailPage from "~/src/components/pages/WatchDetailPage"
-import CurrentTimePage from "~/src/components/pages/CurrentTimePage"
+import { CurrentTimePage } from "~/src/components/pages/CurrentTimePage"
 import { SettingsPage } from "~/src/components/pages/Settings/SettingsPage"
 
 export type RouteDefinition = {

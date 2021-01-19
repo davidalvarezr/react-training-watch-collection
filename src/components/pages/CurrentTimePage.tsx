@@ -1,8 +1,8 @@
 import React from "react"
-import CurrentTime from "~/src/components/blocks/CurrentTime"
+import { CurrentTime } from "~/src/components/blocks/CurrentTime"
 import { PageHeader } from "antd"
 
-function CurrentTimePage() {
+const CurrentTimePage: React.FC = () => {
     return (
         <div>
             <PageHeader
@@ -19,4 +19,4 @@ function CurrentTimePage() {
     )
 }
 
-export default CurrentTimePage
+export { CurrentTimePage }

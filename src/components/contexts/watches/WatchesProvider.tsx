@@ -4,6 +4,8 @@ import { WatchAction, WatchesAction } from "./actions"
 import { initialState, State } from "./state"
 import { useWatchService } from "~/src/components/hooks/useWatchService"
 import { Watch } from "~/src/types/Watch"
+import { v4 as uuidv4 } from "uuid"
+import { dropboxErrorMapper } from "~/src/services/error-mappers/dropboxErrorMapper"
 
 export type Provider = {
     watches: State
@@ -13,7 +15,6 @@ export type Provider = {
 type PropTypes = { children: ReactNode }
 export type Reducer = (state: State, action: WatchAction) => State
 
-// TODO: when writing in the store, also save the list in the local storage
 export const WatchesProvider: React.FC<PropTypes> = ({ children }: PropTypes) => {
     const watchService = useWatchService()
 
@@ -55,7 +56,7 @@ export const WatchesProvider: React.FC<PropTypes> = ({ children }: PropTypes) =>
             }
 
             case WatchesAction.ADD_WATCH: {
-                const watches: Watch[] = [action.payload, ...state.watches]
+                const watches: Watch[] = [{ ...action.payload, uuid: uuidv4() }, ...state.watches]
                 watchService.setWatchList(watches)
                 return { ...state, watches }
             }
@@ -73,6 +74,7 @@ export const WatchesProvider: React.FC<PropTypes> = ({ children }: PropTypes) =>
                 const watches: Watch[] = state.watches.map((aWatch) =>
                     aWatch.uuid === uuid ? watch : aWatch
                 )
+                watchService.setWatchList(watches)
                 return { ...state, watches }
             }
 
@@ -89,7 +91,7 @@ export const WatchesProvider: React.FC<PropTypes> = ({ children }: PropTypes) =>
 
             case WatchesAction.DOWNLOAD:
                 watchService
-                    .persistWatchesFromCloud()
+                    .persistWatchesFromCloud(action.payload)
                     .then((watches) =>
                         dispatch({ type: WatchesAction.DOWNLOAD_SUCCESS, payload: watches })
                     )
@@ -98,7 +100,11 @@ export const WatchesProvider: React.FC<PropTypes> = ({ children }: PropTypes) =>
             case WatchesAction.DOWNLOAD_SUCCESS:
                 return { ...state, downloading: false, watches: action.payload }
             case WatchesAction.DOWNLOAD_FAILURE:
-                return { ...state, downloading: false, downloadError: action.payload }
+                return {
+                    ...state,
+                    downloading: false,
+                    downloadError: dropboxErrorMapper(action.payload),
+                }
 
             default:
                 return state
