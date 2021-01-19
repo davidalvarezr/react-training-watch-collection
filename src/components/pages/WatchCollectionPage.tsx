@@ -14,7 +14,7 @@ export const WatchCollectionPage: React.FC = () => {
         dispatch,
     } = useContext(WatchesContext)
 
-    const clearList = async () => {
+    const clearList = () => {
         if (confirm("Do you really want to clear your list of watches ?")) {
             dispatch({ type: WatchesAction.CLEAR_LIST })
         }

@@ -2,7 +2,8 @@ import React, { Dispatch, ReactNode, useReducer } from "react"
 import { WatchesContext } from "./WatchesContext"
 import { WatchAction, WatchesAction } from "./actions"
 import { initialState, State } from "./state"
-import { watchService } from "~/src/services/container"
+import { useWatchService } from "~/src/components/hooks/useWatchService"
+import { Watch } from "~/src/types/Watch"
 
 export type Provider = {
     watches: State
@@ -12,7 +13,10 @@ export type Provider = {
 type PropTypes = { children: ReactNode }
 export type Reducer = (state: State, action: WatchAction) => State
 
+// TODO: when writing in the store, also save the list in the local storage
 export const WatchesProvider: React.FC<PropTypes> = ({ children }: PropTypes) => {
+    const watchService = useWatchService()
+
     const [watches, dispatch] = useReducer<Reducer>((state, action) => {
         switch (action.type) {
             case WatchesAction.LOAD_FROM_LOCAL_STORAGE:
@@ -30,7 +34,11 @@ export const WatchesProvider: React.FC<PropTypes> = ({ children }: PropTypes) =>
                             payload: e,
                         })
                     })
-                return { ...state, localStorageRetrieveLoading: true }
+                return {
+                    ...state,
+                    localStorageRetrieveLoading: true,
+                    localStorageRetrieveError: undefined,
+                }
             case WatchesAction.LOAD_FROM_LOCAL_STORAGE_SUCCESS:
                 return { ...state, watches: action.payload, localStorageRetrieveLoading: false }
             case WatchesAction.LOAD_FROM_LOCAL_STORAGE_FAILURE:
@@ -39,6 +47,59 @@ export const WatchesProvider: React.FC<PropTypes> = ({ children }: PropTypes) =>
                     localStorageRetrieveLoading: false,
                     localStorageRetrieveError: action.payload,
                 }
+
+            case WatchesAction.CLEAR_LIST: {
+                const watches: Watch[] = []
+                watchService.setWatchList(watches)
+                return { ...state, watches }
+            }
+
+            case WatchesAction.ADD_WATCH: {
+                const watches: Watch[] = [action.payload, ...state.watches]
+                watchService.setWatchList(watches)
+                return { ...state, watches }
+            }
+
+            case WatchesAction.REMOVE_WATCH: {
+                const watches: Watch[] = state.watches.filter(
+                    (watch) => watch.uuid !== action.payload
+                )
+                watchService.setWatchList(watches)
+                return { ...state, watches }
+            }
+
+            case WatchesAction.UPDATE_WATCH: {
+                const { uuid, watch } = action.payload
+                const watches: Watch[] = state.watches.map((aWatch) =>
+                    aWatch.uuid === uuid ? watch : aWatch
+                )
+                return { ...state, watches }
+            }
+
+            case WatchesAction.UPLOAD:
+                watchService
+                    .sendListOnline()
+                    .then(() => dispatch({ type: WatchesAction.UPLOAD_SUCCESS }))
+                    .catch((e) => dispatch({ type: WatchesAction.UPLOAD_FAILURE, payload: e }))
+                return { ...state, uploading: true, uploadError: undefined }
+            case WatchesAction.UPLOAD_SUCCESS:
+                return { ...state, uploading: false }
+            case WatchesAction.UPLOAD_FAILURE:
+                return { ...state, uploading: false, uploadError: action.payload }
+
+            case WatchesAction.DOWNLOAD:
+                watchService
+                    .persistWatchesFromCloud()
+                    .then((watches) =>
+                        dispatch({ type: WatchesAction.DOWNLOAD_SUCCESS, payload: watches })
+                    )
+                    .catch((e) => dispatch({ type: WatchesAction.DOWNLOAD_FAILURE, payload: e }))
+                return { ...state, downloading: true, downloadError: undefined }
+            case WatchesAction.DOWNLOAD_SUCCESS:
+                return { ...state, downloading: false, watches: action.payload }
+            case WatchesAction.DOWNLOAD_FAILURE:
+                return { ...state, downloading: false, downloadError: action.payload }
+
             default:
                 return state
         }

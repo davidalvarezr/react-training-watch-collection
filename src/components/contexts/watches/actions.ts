@@ -9,10 +9,20 @@ export enum WatchesAction {
     LOAD_FROM_LOCAL_STORAGE = "LOAD_FROM_LOCAL_STORAGE",
     LOAD_FROM_LOCAL_STORAGE_SUCCESS = "LOAD_FROM_LOCAL_STORAGE_SUCCESS",
     LOAD_FROM_LOCAL_STORAGE_FAILURE = "LOAD_FROM_LOCAL_STORAGE_FAILURE",
+    UPLOAD = "UPLOAD",
+    UPLOAD_SUCCESS = "UPLOAD_SUCCESS",
+    UPLOAD_FAILURE = "UPLOAD_FAILURE",
+    DOWNLOAD = "DOWNLOAD",
+    DOWNLOAD_SUCCESS = "DOWNLOAD_SUCCESS",
+    DOWNLOAD_FAILURE = "DOWNLOAD_FAILURE",
 }
 
 interface Action {
     type: WatchesAction
+}
+
+interface ActionFailure extends Action {
+    payload: ErrorMessage
 }
 
 interface AddWatch extends Action {
@@ -27,7 +37,10 @@ interface RemoveWatch extends Action {
 
 interface UpdateWatch extends Action {
     type: WatchesAction.UPDATE_WATCH
-    payload: Watch[]
+    payload: {
+        uuid: string
+        watch: Watch
+    }
 }
 
 interface ClearList extends Action {
@@ -43,9 +56,35 @@ interface LoadFromLocalStorageSuccess extends Action {
     payload: Watch[]
 }
 
-interface LoadFromLocalStorageFailure extends Action {
+interface LoadFromLocalStorageFailure extends ActionFailure {
     type: WatchesAction.LOAD_FROM_LOCAL_STORAGE_FAILURE
-    payload: ErrorMessage
+}
+
+interface Upload extends Action {
+    type: WatchesAction.UPLOAD
+    payload: Watch[]
+}
+
+interface UploadSuccess extends Action {
+    type: WatchesAction.UPLOAD_SUCCESS
+}
+
+interface UploadFailure extends ActionFailure {
+    type: WatchesAction.UPLOAD_FAILURE
+}
+
+interface Download extends Action {
+    type: WatchesAction.DOWNLOAD
+    payload: string // The unique id of the user
+}
+
+interface DownloadSuccess extends Action {
+    type: WatchesAction.DOWNLOAD_SUCCESS
+    payload: Watch[]
+}
+
+interface DownloadFailure extends ActionFailure {
+    type: WatchesAction.DOWNLOAD_FAILURE
 }
 
 export type WatchAction =
@@ -56,3 +95,9 @@ export type WatchAction =
     | LoadFromLocalStorage
     | LoadFromLocalStorageSuccess
     | LoadFromLocalStorageFailure
+    | Upload
+    | UploadSuccess
+    | UploadFailure
+    | Download
+    | DownloadSuccess
+    | DownloadFailure
