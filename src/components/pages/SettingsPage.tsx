@@ -1,10 +1,23 @@
-import React, { useContext, useEffect, useState } from "react"
+import React, { CSSProperties, useContext, useEffect, useState } from "react"
 import { useUniqueId } from "~/src/components/hooks/useUniqueId"
 import { DownloadWatch } from "~/src/components/blocks/DownloadWatch"
 import { LoadWrapper } from "~/src/components/blocks/LoadWrapper"
-import { LoadingOutlined } from "@ant-design/icons"
+import { LoadingOutlined, UploadOutlined } from "@ant-design/icons"
 import { WatchesContext } from "~/src/components/contexts/watches/WatchesContext"
 import { WatchesAction } from "~/src/components/contexts/watches/actions"
+import { Button, Col, Divider, Row } from "antd"
+import { ColProps, RowProps } from "antd/es/grid"
+
+const rowProps: RowProps = {
+    gutter: [16, 16],
+    justify: "space-around",
+}
+
+const colProps: ColProps = {
+    xs: 24,
+    md: 16,
+    lg: 12,
+}
 
 export const SettingsPage: React.FC = () => {
     const {
@@ -28,34 +41,42 @@ export const SettingsPage: React.FC = () => {
     }
 
     return (
-        <div>
-            <p>Your code: {uniqueId}</p>
+        <>
+            <Divider orientation="left">Your code: {uniqueId}</Divider>
 
             {/*UPLOAD -------------------------------------------------------*/}
-
-            <LoadWrapper
-                isLoading={uploading}
-                loadingComponent={<LoadingOutlined style={{ fontSize: "32px" }} />}
-                loadingMessage="Uploading watches..."
-                errorMessage={uploadError}
-            >
-                <button onClick={upload}>upload</button>
-            </LoadWrapper>
+            <Row {...rowProps}>
+                <Col {...colProps}>
+                    <LoadWrapper
+                        isLoading={uploading}
+                        loadingComponent={<LoadingOutlined style={{ fontSize: "32px" }} />}
+                        loadingMessage="Uploading watches..."
+                        errorMessage={uploadError}
+                    >
+                        <Button type="primary" onClick={upload} icon={<UploadOutlined />}>
+                            Upload
+                        </Button>
+                    </LoadWrapper>
+                </Col>
+            </Row>
 
             {/*DOWNLOAD -----------------------------------------------------*/}
-
-            <LoadWrapper
-                isLoading={downloading || downloadInput === null}
-                loadingComponent={<LoadingOutlined style={{ fontSize: "32px" }} />}
-                loadingMessage="Downloading watches..."
-                errorMessage={downloadError}
-            >
-                <DownloadWatch
-                    id={downloadInput}
-                    onDownload={download}
-                    onChange={setDownloadInput}
-                />
-            </LoadWrapper>
-        </div>
+            <Row {...rowProps}>
+                <Col {...colProps}>
+                    <LoadWrapper
+                        isLoading={downloading || downloadInput === null}
+                        loadingComponent={<LoadingOutlined style={{ fontSize: "32px" }} />}
+                        loadingMessage="Downloading watches..."
+                        errorMessage={downloadError}
+                    >
+                        <DownloadWatch
+                            id={downloadInput}
+                            onDownload={download}
+                            onChange={setDownloadInput}
+                        />
+                    </LoadWrapper>
+                </Col>
+            </Row>
+        </>
     )
 }

@@ -1,10 +1,15 @@
 import React, { ChangeEvent, Fragment, useState } from "react"
+import { Button, Input } from "antd"
+import Search from "antd/es/input/Search"
+import { DownloadOutlined } from "@ant-design/icons"
 
 type PropTypes = {
     id: string
     onDownload: (id: string) => void
     onChange?: (id: string) => void
 }
+
+const suffix = <DownloadOutlined />
 
 export const DownloadWatch: React.FC<PropTypes> = ({ id, onDownload, onChange }: PropTypes) => {
     const [inputValue, setInputValue] = useState<string>(id)
@@ -16,15 +21,14 @@ export const DownloadWatch: React.FC<PropTypes> = ({ id, onDownload, onChange }:
     }
 
     return (
-        <Fragment>
-            <button onClick={() => onDownload(inputValue)}>download</button>
-            <input
-                type="text"
-                placeholder="code"
-                onChange={onDownloadInputChange}
-                value={inputValue}
-                style={{ width: "300px", maxWidth: "100%" }}
-            />
-        </Fragment>
+        <Search
+            placeholder="code"
+            enterButton="Download"
+            size="middle"
+            suffix={suffix}
+            onSearch={onDownload}
+            onChange={onDownloadInputChange}
+            value={inputValue}
+        />
     )
 }
