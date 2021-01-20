@@ -72,7 +72,7 @@ export const WatchesProvider: React.FC<PropTypes> = ({ children }: PropTypes) =>
             case WatchesAction.UPDATE_WATCH: {
                 const { uuid, watch } = action.payload
                 const watches: Watch[] = state.watches.map((aWatch) =>
-                    aWatch.uuid === uuid ? watch : aWatch
+                    aWatch.uuid === uuid ? { ...watch, uuid } : aWatch
                 )
                 watchService.setWatchList(watches)
                 return { ...state, watches }

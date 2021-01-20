@@ -1,4 +1,4 @@
-import React, { CSSProperties, useMemo, useState } from "react"
+import React, { CSSProperties, useMemo, useRef, useState } from "react"
 import { Watch } from "~/src/types/Watch"
 import { useFileService } from "~/src/components/hooks/useFileService"
 import { ImageSelector } from "~/src/components/blocks/ImageSelector"
@@ -6,7 +6,7 @@ import { useConsoleService } from "~/src/components/hooks/useConsoleService"
 import { Mode } from "~/src/types/Mode"
 import { Button, Col, Divider, Input, Row } from "antd"
 import { ColProps, RowProps } from "antd/es/grid"
-import TextArea from "antd/es/input/TextArea"
+import TextArea, { TextAreaRef } from "antd/es/input/TextArea"
 import useBreakpoint from "antd/es/grid/hooks/useBreakpoint"
 import { Breakpoint } from "antd/es/_util/responsiveObserve"
 
@@ -74,21 +74,27 @@ const WatchForm: React.FC<PropTypes> = ({ watch, addWatch, updateWatch }: PropTy
     // The state of the form
     const [state, setState] = useState<Watch>(watch)
 
+    // brandRef.current.state.value
+    const brandRef = useRef<Input>()
+    const modelRef = useRef<Input>()
+    const descriptionRef = useRef<TextAreaRef>()
+    const priceBoughtRef = useRef<Input>()
+
     // Memo prevents the expensive calculation when we type in a field (which causes a render)
     const image = useMemo(() => fileService.dataUrlToFileObject(state.image, "watch"), [
         state.image,
     ])
 
-    // handler method for the text inputs
-    const updateState = (key: keyof Watch, value: string) => {
-        setState({
-            ...state,
-            ...{ [key]: value },
-        })
+    const updateOrAddWatch = () => {
+        const w: Watch = {
+            brand: brandRef.current.input.value,
+            model: modelRef.current.input.value,
+            description: descriptionRef.current.resizableTextArea.textArea.value,
+            priceBought: priceBoughtRef.current.input.value,
+            image: state.image,
+        }
+        mode === Mode.EDIT ? updateWatch({ watch: w, uuid: watch.uuid }) : addWatch(w)
     }
-
-    const updateOrAddWatch = () =>
-        mode === Mode.EDIT ? updateWatch({ watch: state, uuid: watch.uuid }) : addWatch(state)
 
     const onImageChange = async (file) => {
         const base64File: string = await fileService.toBase64(file)
@@ -110,11 +116,7 @@ const WatchForm: React.FC<PropTypes> = ({ watch, addWatch, updateWatch }: PropTy
                     Brand
                 </Col>
                 <Col {...inputColProps}>
-                    <Input
-                        type="text"
-                        value={state.brand}
-                        onChange={(evt) => updateState("brand", evt.target.value)}
-                    />
+                    <Input type="text" ref={brandRef} defaultValue={watch.brand} />
                 </Col>
             </Row>
 
@@ -124,39 +126,31 @@ const WatchForm: React.FC<PropTypes> = ({ watch, addWatch, updateWatch }: PropTy
                     Model
                 </Col>
                 <Col {...inputColProps}>
-                    <Input
-                        type="text"
-                        value={state.model}
-                        onChange={(evt) => updateState("model", evt.target.value)}
-                    />
+                    <Input type="text" ref={modelRef} defaultValue={watch.model} />
                 </Col>
             </Row>
 
+            {/*Description*/}
             <Row {...rowProps(bp)} style={rowStyle}>
                 <Col {...labelColProps} style={labelColStyle(bp)}>
                     Description
                 </Col>
                 <Col {...inputColProps}>
-                    <TextArea
-                        value={state.description}
-                        onChange={(evt) => updateState("description", evt.target.value)}
-                    />
+                    <TextArea ref={descriptionRef} defaultValue={watch.description} />
                 </Col>
             </Row>
 
+            {/*Price bought*/}
             <Row {...rowProps(bp)} style={rowStyle}>
                 <Col {...labelColProps} style={labelColStyle(bp)}>
                     Price bought
                 </Col>
                 <Col {...inputColProps}>
-                    <Input
-                        type="number"
-                        value={state.priceBought}
-                        onChange={(evt) => updateState("priceBought", evt.target.value)}
-                    />
+                    <Input type="number" ref={priceBoughtRef} defaultValue={watch.priceBought} />
                 </Col>
             </Row>
 
+            {/*Image*/}
             <Row {...rowProps(bp)} style={rowStyle}>
                 <Col {...labelColProps} style={labelColStyle(bp)} />
                 <Col {...inputColProps}>
