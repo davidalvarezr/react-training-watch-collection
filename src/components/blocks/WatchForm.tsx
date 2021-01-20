@@ -1,9 +1,17 @@
-import React, { useMemo, useState } from "react"
+import React, { CSSProperties, useMemo, useState } from "react"
 import { Watch } from "~/src/types/Watch"
 import { useFileService } from "~/src/components/hooks/useFileService"
 import { ImageSelector } from "~/src/components/blocks/ImageSelector"
 import { useConsoleService } from "~/src/components/hooks/useConsoleService"
 import { Mode } from "~/src/types/Mode"
+import { Button, Col, Divider, Input, Row } from "antd"
+import { ColProps, RowProps } from "antd/es/grid"
+import TextArea from "antd/es/input/TextArea"
+import useBreakpoint from "antd/es/grid/hooks/useBreakpoint"
+import { Breakpoint } from "antd/es/_util/responsiveObserve"
+
+const FORM_H_PADDING = 16
+const FORM_V_PADDING = 8
 
 interface PropTypes {
     watch?: Watch
@@ -16,6 +24,32 @@ const initialFormState: Watch = {
     model: "",
     description: "",
     priceBought: "",
+}
+
+const rowProps = (br: Partial<Record<Breakpoint, boolean>>): RowProps => ({
+    align: "middle",
+    gutter: FORM_H_PADDING,
+    justify: br.xs ? "start" : "center",
+})
+
+const rowStyle: CSSProperties = {
+    paddingBottom: `${FORM_V_PADDING}px`,
+}
+
+const labelColProps: ColProps = {
+    flex: "100px",
+}
+
+const labelColStyle = (br: Partial<Record<Breakpoint, boolean>>): CSSProperties => ({
+    textAlign: br.xs ? "left" : "right",
+})
+
+const inputColProps: ColProps = {
+    xs: 24,
+    sm: 16,
+    md: 12,
+    lg: 10,
+    xl: 8,
 }
 
 /**
@@ -35,6 +69,7 @@ const WatchForm: React.FC<PropTypes> = ({ watch, addWatch, updateWatch }: PropTy
 
     const fileService = useFileService()
     const consoleService = useConsoleService()
+    const bp = useBreakpoint()
 
     // The state of the form
     const [state, setState] = useState<Watch>(watch)
@@ -44,16 +79,6 @@ const WatchForm: React.FC<PropTypes> = ({ watch, addWatch, updateWatch }: PropTy
         state.image,
     ])
 
-    // useEffect(() => {
-    //     consoleService.log("WatchForm mount")
-    //     return () => {
-    //         consoleService.log("WatchForm unmount")
-    //     }
-    // }, [])
-    // useEffect(() => {
-    //     consoleService.log("WatchForm after render")
-    // })
-
     // handler method for the text inputs
     const updateState = (key: keyof Watch, value: string) => {
         setState({
@@ -61,6 +86,9 @@ const WatchForm: React.FC<PropTypes> = ({ watch, addWatch, updateWatch }: PropTy
             ...{ [key]: value },
         })
     }
+
+    const updateOrAddWatch = () =>
+        mode === Mode.EDIT ? updateWatch({ watch: state, uuid: watch.uuid }) : addWatch(state)
 
     const onImageChange = async (file) => {
         const base64File: string = await fileService.toBase64(file)
@@ -74,62 +102,69 @@ const WatchForm: React.FC<PropTypes> = ({ watch, addWatch, updateWatch }: PropTy
 
     return (
         <div className="watch-collection-form">
-            <h1>{watch ? "Edit" : "Add"} a watch</h1>
-            <br />
+            <Divider orientation="left">{mode === Mode.EDIT ? "Edit" : "Add"} a watch</Divider>
 
-            <label>
-                Brand
-                <input
-                    type="text"
-                    value={state.brand}
-                    onChange={(evt) => updateState("brand", evt.target.value)}
-                />
-            </label>
-            <br />
+            {/*Brand*/}
+            <Row {...rowProps(bp)} style={rowStyle}>
+                <Col {...labelColProps} style={labelColStyle(bp)}>
+                    Brand
+                </Col>
+                <Col {...inputColProps}>
+                    <Input
+                        type="text"
+                        value={state.brand}
+                        onChange={(evt) => updateState("brand", evt.target.value)}
+                    />
+                </Col>
+            </Row>
 
-            <label>
-                Model
-                <input
-                    type="text"
-                    value={state.model}
-                    onChange={(evt) => updateState("model", evt.target.value)}
-                />
-            </label>
-            <br />
+            {/*Model*/}
+            <Row {...rowProps(bp)} style={rowStyle}>
+                <Col {...labelColProps} style={labelColStyle(bp)}>
+                    Model
+                </Col>
+                <Col {...inputColProps}>
+                    <Input
+                        type="text"
+                        value={state.model}
+                        onChange={(evt) => updateState("model", evt.target.value)}
+                    />
+                </Col>
+            </Row>
 
-            <label>
-                Description
-                <input
-                    type="text"
-                    value={state.description}
-                    onChange={(evt) => updateState("description", evt.target.value)}
-                />
-            </label>
-            <br />
+            <Row {...rowProps(bp)} style={rowStyle}>
+                <Col {...labelColProps} style={labelColStyle(bp)}>
+                    Description
+                </Col>
+                <Col {...inputColProps}>
+                    <TextArea
+                        value={state.description}
+                        onChange={(evt) => updateState("description", evt.target.value)}
+                    />
+                </Col>
+            </Row>
 
-            <label>
-                Price bought
-                <input
-                    type="number"
-                    value={state.priceBought}
-                    onChange={(evt) => updateState("priceBought", evt.target.value)}
-                />
-            </label>
-            <br />
+            <Row {...rowProps(bp)} style={rowStyle}>
+                <Col {...labelColProps} style={labelColStyle(bp)}>
+                    Price bought
+                </Col>
+                <Col {...inputColProps}>
+                    <Input
+                        type="number"
+                        value={state.priceBought}
+                        onChange={(evt) => updateState("priceBought", evt.target.value)}
+                    />
+                </Col>
+            </Row>
 
-            <ImageSelector image={image} onImageChange={onImageChange} />
+            <Row {...rowProps(bp)} style={rowStyle}>
+                <Col {...labelColProps} style={labelColStyle(bp)} />
+                <Col {...inputColProps}>
+                    <ImageSelector image={image} onImageChange={onImageChange} />
+                </Col>
+            </Row>
 
-            <br />
-            <br />
-            <button
-                onClick={() =>
-                    mode === Mode.EDIT
-                        ? updateWatch({ watch: state, uuid: watch.uuid })
-                        : addWatch(state)
-                }
-            >
-                Submit
-            </button>
+            <Button onClick={updateOrAddWatch}>Submit</Button>
         </div>
     )
 }
