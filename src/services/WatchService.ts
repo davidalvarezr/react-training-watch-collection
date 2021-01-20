@@ -2,8 +2,6 @@ import IWatchService from "~/src/services/IWatchService"
 import { Watch } from "~/src/types/Watch"
 import { v4 as uuidv4 } from "uuid"
 import { Dropbox, DropboxResponse, files } from "dropbox"
-import { fileDownloadThrower } from "~/src/services/throwers/fileDownloadThrower"
-import { fileUploadThrower } from "~/src/services/throwers/fileUploadThrower"
 import { ILocalStorageService } from "~/src/services/ILocalStorageService"
 import { IFileService } from "~/src/services/IFileService"
 

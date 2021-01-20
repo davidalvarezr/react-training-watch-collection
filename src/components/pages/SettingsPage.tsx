@@ -24,8 +24,6 @@ export const SettingsPage: React.FC = () => {
     }
 
     const download = (id: string) => {
-        console.log("doewnloadInput", downloadInput)
-        console.log("id", id)
         dispatch({ type: WatchesAction.DOWNLOAD, payload: id })
     }
 

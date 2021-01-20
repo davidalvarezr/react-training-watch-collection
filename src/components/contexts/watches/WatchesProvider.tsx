@@ -87,7 +87,11 @@ export const WatchesProvider: React.FC<PropTypes> = ({ children }: PropTypes) =>
             case WatchesAction.UPLOAD_SUCCESS:
                 return { ...state, uploading: false }
             case WatchesAction.UPLOAD_FAILURE:
-                return { ...state, uploading: false, uploadError: action.payload }
+                return {
+                    ...state,
+                    uploading: false,
+                    uploadError: dropboxErrorMapper(action.payload),
+                }
 
             case WatchesAction.DOWNLOAD:
                 watchService

@@ -5,11 +5,12 @@ import { LocalStorageService } from "~/src/services/LocalStorageService"
 import { UNIQUE_ID, WATCH_LIST } from "~/src/config/labels"
 import { FileService } from "~/src/services/FileService"
 import { ConsoleService } from "~/src/services/ConsoleService"
+import { consoleConfig } from "~/src/config/consoleService"
 
 const DIRECTORY = "/"
 const EXTENSION = ".json"
 
-export const consoleService = new ConsoleService()
+export const consoleService = new ConsoleService(consoleConfig)
 
 const dbx = new Dropbox({ accessToken: dropboxConfig.ACCESS_TOKEN })
 
