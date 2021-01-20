@@ -2,7 +2,7 @@
   "name": "react-training-watch-collection",
   "scripts": {
     "start": "parcel serve ./src/index.html",
-    "build": "parcel build ./src/index.html"
+    "build": "parcel build ./src/index.html --public-url ./"
   },
   "dependencies": {
     "@ant-design/icons": "^4.3.0",

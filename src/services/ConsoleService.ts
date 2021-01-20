@@ -32,6 +32,6 @@ export class ConsoleService implements IConsoleService {
     logAction(...data: unknown[]): void {
         if (!this.config.logAction) return
         // eslint-disable-next-line no-console
-        console.error(...data)
+        console.info(...data)
     }
 }

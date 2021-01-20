@@ -2,11 +2,15 @@ import React, { CSSProperties, useContext, useEffect, useState } from "react"
 import { useUniqueId } from "~/src/components/hooks/useUniqueId"
 import { DownloadWatch } from "~/src/components/blocks/DownloadWatch"
 import { LoadWrapper } from "~/src/components/blocks/LoadWrapper"
-import { LoadingOutlined, UploadOutlined } from "@ant-design/icons"
+import { DownloadOutlined, LoadingOutlined, UploadOutlined } from "@ant-design/icons"
 import { WatchesContext } from "~/src/components/contexts/watches/WatchesContext"
 import { WatchesAction } from "~/src/components/contexts/watches/actions"
-import { Button, Col, Divider, Row } from "antd"
+import { Button, Col, Divider, Row, Typography } from "antd"
 import { ColProps, RowProps } from "antd/es/grid"
+import Paragraph from "antd/es/typography/Paragraph"
+import { VerticalSpace } from "~/src/components/blocks/VerticalSpace"
+
+const { Text } = Typography
 
 const rowProps: RowProps = {
     gutter: [16, 16],
@@ -43,6 +47,26 @@ export const SettingsPage: React.FC = () => {
     return (
         <>
             <Divider orientation="left">Your code: {uniqueId}</Divider>
+
+            <Typography>
+                <Paragraph>
+                    Your code is a unique identifier that allows you to share your list across
+                    different computers.
+                </Paragraph>
+                <Paragraph>
+                    Click{" "}
+                    <Text code>
+                        <UploadOutlined /> Upload
+                    </Text>{" "}
+                    to save your list on the cloud
+                </Paragraph>
+                <Paragraph>
+                    If your list is already on the cloud, you can <DownloadOutlined />
+                    <Text code>Download</Text> it using your code
+                </Paragraph>
+            </Typography>
+
+            <VerticalSpace />
 
             {/*UPLOAD -------------------------------------------------------*/}
             <Row {...rowProps}>

@@ -6,6 +6,7 @@ import { useWatchService } from "~/src/components/hooks/useWatchService"
 import { Watch } from "~/src/types/Watch"
 import { v4 as uuidv4 } from "uuid"
 import { dropboxErrorMapper } from "~/src/services/error-mappers/dropboxErrorMapper"
+import { useConsoleService } from "~/src/components/hooks/useConsoleService"
 
 export type Provider = {
     watches: State
@@ -17,8 +18,11 @@ export type Reducer = (state: State, action: WatchAction) => State
 
 export const WatchesProvider: React.FC<PropTypes> = ({ children }: PropTypes) => {
     const watchService = useWatchService()
+    const consoleService = useConsoleService()
 
     const [watches, dispatch] = useReducer<Reducer>((state, action) => {
+        consoleService.logAction(action, state)
+
         switch (action.type) {
             case WatchesAction.LOAD_FROM_LOCAL_STORAGE:
                 watchService
@@ -45,6 +49,7 @@ export const WatchesProvider: React.FC<PropTypes> = ({ children }: PropTypes) =>
             case WatchesAction.LOAD_FROM_LOCAL_STORAGE_FAILURE:
                 return {
                     ...state,
+                    initialized: true,
                     localStorageRetrieveLoading: false,
                     localStorageRetrieveError: action.payload,
                 }

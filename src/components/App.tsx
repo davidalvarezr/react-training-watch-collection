@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from "react"
+import React, { useContext, useEffect, useMemo } from "react"
 import { BrowserRouter } from "react-router-dom"
 import { Layout } from "antd"
 import "antd/dist/antd.css"
@@ -12,7 +12,10 @@ import { WatchesAction } from "~/src/components/contexts/watches/actions"
 const { Content, Footer } = Layout
 
 export const App: React.FC = () => {
-    const { dispatch } = useContext(WatchesContext)
+    const {
+        watches: { localStorageRetrieveLoading, initialized },
+        dispatch,
+    } = useContext(WatchesContext)
 
     useEffect(() => {
         dispatch({ type: WatchesAction.LOAD_FROM_LOCAL_STORAGE })

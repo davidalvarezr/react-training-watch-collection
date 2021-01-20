@@ -6,6 +6,7 @@ export type State = {
     watches: Watch[]
     localStorageRetrieveLoading: boolean
     localStorageRetrieveError?: ErrorMessage
+    initialized: boolean
     uploading: boolean
     uploadError?: DropboxErrorFinalMessage
     downloading: boolean
@@ -15,6 +16,7 @@ export type State = {
 export const initialState: State = {
     watches: [],
     localStorageRetrieveLoading: false,
+    initialized: false,
     uploading: false,
     downloading: false,
 }

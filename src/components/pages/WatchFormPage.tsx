@@ -1,4 +1,4 @@
-import { WatchForm } from "~/src/components/blocks/WatchForm"
+import { WatchForm } from "~/src/components/blocks/watch-form/WatchForm"
 import React, { ReactElement, useContext, useMemo } from "react"
 import { useParams } from "react-router-dom"
 import { Watch } from "~/src/types/Watch"
