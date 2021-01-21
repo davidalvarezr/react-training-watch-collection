@@ -53,6 +53,7 @@ export class FileService implements IFileService {
         return URL.createObjectURL(file)
     }
 
+    // FIXME: remove it and use UserService instead
     async getFilenameFromCurrentUser(extension = this.extension): Promise<string> {
         const uniqueId =
             (await this.storage.getItemAsString(this.uniqueIdLabel)) ??

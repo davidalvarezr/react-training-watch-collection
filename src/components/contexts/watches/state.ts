@@ -4,8 +4,9 @@ import { DropboxErrorFinalMessage } from "~/src/services/error-mappers/dropboxEr
 
 export type State = {
     watches: Watch[]
+    uuid?: string
     initializing: boolean
-    localStorageRetrieveError?: ErrorMessage
+    initializeError?: ErrorMessage
     uploading: boolean
     uploadError?: DropboxErrorFinalMessage
     downloading: boolean

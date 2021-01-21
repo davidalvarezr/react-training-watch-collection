@@ -45,16 +45,19 @@ interface ClearList extends Action {
     type: WatchesAction.CLEAR_LIST
 }
 
-interface LoadFromLocalStorage extends Action {
+interface initialize extends Action {
     type: WatchesAction.INITIALIZE
 }
 
-interface LoadFromLocalStorageSuccess extends Action {
+interface initializeSuccess extends Action {
     type: WatchesAction.INITIALIZE_SUCCESS
-    payload: Watch[]
+    payload: {
+        watches: Watch[]
+        uuid: string
+    }
 }
 
-interface LoadFromLocalStorageFailure extends Action {
+interface initializeFailure extends Action {
     type: WatchesAction.INITIALIZE_FAILURE
     payload: ErrorMessage
 }
@@ -92,9 +95,9 @@ export type WatchAction =
     | RemoveWatch
     | UpdateWatch
     | ClearList
-    | LoadFromLocalStorage
-    | LoadFromLocalStorageSuccess
-    | LoadFromLocalStorageFailure
+    | initialize
+    | initializeSuccess
+    | initializeFailure
     | Upload
     | UploadSuccess
     | UploadFailure

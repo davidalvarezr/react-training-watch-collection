@@ -2,7 +2,7 @@ import React from "react"
 import { WatchAction, WatchesAction } from "~/src/components/contexts/watches/actions"
 import { Watch } from "~/src/types/Watch"
 import { dropboxErrorMapper } from "~/src/services/error-mappers/dropboxErrorMapper"
-import { consoleService, watchService } from "~/src/services/container"
+import { consoleService, userService, watchService } from "~/src/services/container"
 import { State } from "~/src/components/contexts/watches/state"
 import { v4 as uuidv4 } from "uuid"
 
@@ -16,12 +16,11 @@ export const dispatchMiddleware: DispatchMiddleware = (dispatch) => {
     return (action) => {
         switch (action.type) {
             case WatchesAction.INITIALIZE:
-                watchService
-                    .getWatchList()
-                    .then((watches) => {
+                Promise.all([watchService.getWatchList(), userService.getUuid()])
+                    .then(([watches, uuid]: [Watch[], string]) => {
                         dispatch({
                             type: WatchesAction.INITIALIZE_SUCCESS,
-                            payload: watches,
+                            payload: { watches: watches, uuid: uuid },
                         })
                     })
                     .catch((e) => {
@@ -62,16 +61,19 @@ export const reducer: Reducer = (state, action) => {
             return {
                 ...state,
                 initializing: true,
-                localStorageRetrieveError: undefined,
+                initializeError: undefined,
             }
-        case WatchesAction.INITIALIZE_SUCCESS:
-            return { ...state, watches: action.payload, initializing: false }
+        case WatchesAction.INITIALIZE_SUCCESS: {
+            console.log("action.payload", action.payload)
+            const { watches, uuid } = action.payload
+            return { ...state, watches, uuid, initializing: false }
+        }
         case WatchesAction.INITIALIZE_FAILURE:
             return {
                 ...state,
                 initialized: true,
                 initializing: false,
-                localStorageRetrieveError: action.payload,
+                initializeError: action.payload,
             }
 
         case WatchesAction.CLEAR_LIST: {

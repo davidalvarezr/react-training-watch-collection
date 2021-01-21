@@ -6,6 +6,7 @@ import { UNIQUE_ID, WATCH_LIST } from "~/src/config/labels"
 import { FileService } from "~/src/services/FileService"
 import { ConsoleService } from "~/src/services/ConsoleService"
 import { consoleConfig } from "~/src/config/consoleService"
+import { UserService } from "~/src/services/UserService"
 
 const DIRECTORY = "/"
 const EXTENSION = ".json"
@@ -23,3 +24,4 @@ export const watchService = new WatchService(
     storageService,
     fileService
 )
+export const userService = new UserService(storageService, UNIQUE_ID)
