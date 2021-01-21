@@ -2,6 +2,32 @@
 
 - Mentor: Maxym Kot
 
+## Get started
+The "backend" is Dropbox. You can make the app work by creating a project in your dropbox:
+1. https://www.dropbox.com/developers > ``App console`` > ``Create app``.
+
+2. You must then change the permissions: ``Permissions`` >
+  
+  - [x] files.content.write
+  - [x] files.content.read
+
+3. Then, you have to generate the access token: ``Settings`` > ``Generated Access Token`` > `Generate`
+4. Copy and paste the generated access token into an ``.env`` file at the root of your project folder
+```dotenv
+REACT_APP_DROPBOX_ACCESS_TOKEN=<generated_access_token>
+```
+
+It will then add those features:
+- Store the list online
+- Retrieve the list from another instance of the app
+
+### Run the project
+Do not forget the above steps (.env)
+```shell
+yarn install && npm start
+```
+
+
 ## Description
 
 Small project to handle React. This is an app designed for watch collectors.
