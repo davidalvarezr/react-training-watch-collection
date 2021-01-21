@@ -4,7 +4,7 @@ import { DropboxErrorFinalMessage } from "~/src/services/error-mappers/dropboxEr
 
 export type State = {
     watches: Watch[]
-    localStorageRetrieveLoading: boolean
+    initializing: boolean
     localStorageRetrieveError?: ErrorMessage
     initialized: boolean
     uploading: boolean
@@ -15,7 +15,7 @@ export type State = {
 
 export const initialState: State = {
     watches: [],
-    localStorageRetrieveLoading: false, // FIXME: rename to "initializing"
+    initializing: false, // FIXME: rename to "initializing"
     initialized: false,
     uploading: false,
     downloading: false,

@@ -61,16 +61,16 @@ export const reducer: Reducer = (state, action) => {
         case WatchesAction.LOAD_FROM_LOCAL_STORAGE:
             return {
                 ...state,
-                localStorageRetrieveLoading: true,
+                initializing: true,
                 localStorageRetrieveError: undefined,
             }
         case WatchesAction.LOAD_FROM_LOCAL_STORAGE_SUCCESS:
-            return { ...state, watches: action.payload, localStorageRetrieveLoading: false }
+            return { ...state, watches: action.payload, initializing: false }
         case WatchesAction.LOAD_FROM_LOCAL_STORAGE_FAILURE:
             return {
                 ...state,
                 initialized: true,
-                localStorageRetrieveLoading: false,
+                initializing: false,
                 localStorageRetrieveError: action.payload,
             }
 

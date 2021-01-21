@@ -17,7 +17,7 @@ const { Content, Footer } = Layout
 
 export const App: React.FC = () => {
     const {
-        watches: { localStorageRetrieveLoading },
+        watches: { initializing },
         dispatch,
     } = useContext(WatchesContext)
 
@@ -26,7 +26,7 @@ export const App: React.FC = () => {
     }, [])
 
     return (
-        <LoadWrapper isLoading={localStorageRetrieveLoading} loadingComponent={WholePageLoad}>
+        <LoadWrapper isLoading={initializing} loadingComponent={WholePageLoad}>
             <BrowserRouter>
                 <Layout className="layout">
                     <MenuHeader />

@@ -17,7 +17,7 @@ const LOADING_MESSAGE = "Watches are being loaded from the local storage"
  */
 export const WatchFormPage = (): ReactElement => {
     const {
-        watches: { watches, localStorageRetrieveLoading },
+        watches: { watches, initializing },
         dispatch,
     } = useContext(WatchesContext)
 
@@ -47,7 +47,7 @@ export const WatchFormPage = (): ReactElement => {
 
     if (mode === Mode.EDIT) {
         return (
-            <LoadWrapper isLoading={localStorageRetrieveLoading} loadingMessage={LOADING_MESSAGE}>
+            <LoadWrapper isLoading={initializing} loadingMessage={LOADING_MESSAGE}>
                 {watch && <WatchForm watch={watch} updateWatch={updateWatch} />}
             </LoadWrapper>
         )

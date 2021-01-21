@@ -10,7 +10,7 @@ import { VerticalSpace } from "~/src/components/blocks/VerticalSpace"
 
 export const WatchCollectionPage: React.FC = () => {
     const {
-        watches: { watches, localStorageRetrieveLoading },
+        watches: { watches, initializing },
         dispatch,
     } = useContext(WatchesContext)
 
@@ -34,7 +34,7 @@ export const WatchCollectionPage: React.FC = () => {
             <VerticalSpace height="10px" />
 
             <div>
-                <LoadWrapper isLoading={localStorageRetrieveLoading}>
+                <LoadWrapper isLoading={initializing}>
                     <WatchList watches={watches} />
                 </LoadWrapper>
             </div>
