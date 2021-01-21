@@ -8,9 +8,9 @@ export enum WatchesAction {
     REMOVE_WATCH = "REMOVE_WATCH",
     UPDATE_WATCH = "UPDATE_WATCH",
     CLEAR_LIST = "CLEAR_LIST",
-    LOAD_FROM_LOCAL_STORAGE = "LOAD_FROM_LOCAL_STORAGE",
-    LOAD_FROM_LOCAL_STORAGE_SUCCESS = "LOAD_FROM_LOCAL_STORAGE_SUCCESS",
-    LOAD_FROM_LOCAL_STORAGE_FAILURE = "LOAD_FROM_LOCAL_STORAGE_FAILURE",
+    INITIALIZE = "INITIALIZE",
+    INITIALIZE_SUCCESS = "INITIALIZE_SUCCESS",
+    INITIALIZE_FAILURE = "INITIALIZE_FAILURE",
     UPLOAD = "UPLOAD",
     UPLOAD_SUCCESS = "UPLOAD_SUCCESS",
     UPLOAD_FAILURE = "UPLOAD_FAILURE",
@@ -46,16 +46,16 @@ interface ClearList extends Action {
 }
 
 interface LoadFromLocalStorage extends Action {
-    type: WatchesAction.LOAD_FROM_LOCAL_STORAGE
+    type: WatchesAction.INITIALIZE
 }
 
 interface LoadFromLocalStorageSuccess extends Action {
-    type: WatchesAction.LOAD_FROM_LOCAL_STORAGE_SUCCESS
+    type: WatchesAction.INITIALIZE_SUCCESS
     payload: Watch[]
 }
 
 interface LoadFromLocalStorageFailure extends Action {
-    type: WatchesAction.LOAD_FROM_LOCAL_STORAGE_FAILURE
+    type: WatchesAction.INITIALIZE_FAILURE
     payload: ErrorMessage
 }
 

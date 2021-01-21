@@ -22,7 +22,7 @@ export const App: React.FC = () => {
     } = useContext(MainContext)
 
     useEffect(() => {
-        dispatch({ type: WatchesAction.LOAD_FROM_LOCAL_STORAGE })
+        dispatch({ type: WatchesAction.INITIALIZE })
     }, [])
 
     return (

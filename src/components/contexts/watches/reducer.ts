@@ -15,18 +15,18 @@ export type Reducer = (state: State, action: WatchAction) => State
 export const dispatchMiddleware: DispatchMiddleware = (dispatch) => {
     return (action) => {
         switch (action.type) {
-            case WatchesAction.LOAD_FROM_LOCAL_STORAGE:
+            case WatchesAction.INITIALIZE:
                 watchService
                     .getWatchList()
                     .then((watches) => {
                         dispatch({
-                            type: WatchesAction.LOAD_FROM_LOCAL_STORAGE_SUCCESS,
+                            type: WatchesAction.INITIALIZE_SUCCESS,
                             payload: watches,
                         })
                     })
                     .catch((e) => {
                         dispatch({
-                            type: WatchesAction.LOAD_FROM_LOCAL_STORAGE_FAILURE,
+                            type: WatchesAction.INITIALIZE_FAILURE,
                             payload: e,
                         })
                     })
@@ -58,15 +58,15 @@ export const reducer: Reducer = (state, action) => {
     consoleService.logAction(action, state)
 
     switch (action.type) {
-        case WatchesAction.LOAD_FROM_LOCAL_STORAGE:
+        case WatchesAction.INITIALIZE:
             return {
                 ...state,
                 initializing: true,
                 localStorageRetrieveError: undefined,
             }
-        case WatchesAction.LOAD_FROM_LOCAL_STORAGE_SUCCESS:
+        case WatchesAction.INITIALIZE_SUCCESS:
             return { ...state, watches: action.payload, initializing: false }
-        case WatchesAction.LOAD_FROM_LOCAL_STORAGE_FAILURE:
+        case WatchesAction.INITIALIZE_FAILURE:
             return {
                 ...state,
                 initialized: true,
