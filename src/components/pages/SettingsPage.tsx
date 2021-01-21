@@ -37,10 +37,12 @@ export const SettingsPage: React.FC = () => {
     }, [uniqueId])
 
     const upload = () => {
+        console.log("clicked on upload")
         dispatch({ type: WatchesAction.UPLOAD })
     }
 
     const download = (id: string) => {
+        console.log("clicked on download")
         dispatch({ type: WatchesAction.DOWNLOAD, payload: id })
     }
 

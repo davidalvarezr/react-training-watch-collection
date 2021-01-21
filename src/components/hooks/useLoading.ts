@@ -2,7 +2,8 @@ import { useState } from "react"
 import { ErrorMessage } from "~/src/components/blocks/ErrorDisplayer"
 
 // FIXME: is there a way to hold the state of this hook between renders ?
-// FIXME: See commented lines
+// Is it supposed to do it naturally or useContext must be used ?
+// See commented lines
 
 type BeginLoading = () => void
 type FinishLoading = () => void

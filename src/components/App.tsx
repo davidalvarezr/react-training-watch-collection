@@ -11,6 +11,13 @@ import { WatchesAction } from "~/src/components/contexts/watches/actions"
 
 const { Content, Footer } = Layout
 
+// FIXME: Why the app dispatches 2 times the WatchesAction.LOAD_FROM_LOCAL_STORAGE
+// FIXME: action ? useEffect() with empty array of dependency should run only once, no ?
+// maybe related to https://github.com/facebook/react/issues/16295#issuecomment-610098654 ?
+// https://reactjs.org/docs/strict-mode.html#detecting-unexpected-side-effects
+
+// See here: 3 solutions: https://gist.github.com/astoilkov/013c513e33fe95fa8846348038d8fe42
+
 export const App: React.FC = () => {
     const {
         watches: { localStorageRetrieveLoading, initialized },
