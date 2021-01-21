@@ -1,6 +1,6 @@
 import { IFileService } from "~/src/services/IFileService"
 import { ILocalStorageService } from "~/src/services/ILocalStorageService"
-import { v4 as uuidv4 } from "uuid"
+import { UserService } from "~/src/services/UserService"
 
 export class FileService implements IFileService {
     /**
@@ -8,11 +8,13 @@ export class FileService implements IFileService {
      * @param extension the file extension on dropbox
      * @param storage
      * @param uniqueIdLabel the label under which the unique id of the user will be stored
+     * @param userService
      */
     constructor(
         private extension: string,
         private storage: ILocalStorageService,
-        private uniqueIdLabel: string
+        private uniqueIdLabel: string,
+        private userService: UserService
     ) {}
 
     toBase64(file: File): Promise<string> {
@@ -53,11 +55,8 @@ export class FileService implements IFileService {
         return URL.createObjectURL(file)
     }
 
-    // FIXME: remove it and use UserService instead
     async getFilenameFromCurrentUser(extension = this.extension): Promise<string> {
-        const uniqueId =
-            (await this.storage.getItemAsString(this.uniqueIdLabel)) ??
-            (await this.storage.setItem<string>(this.uniqueIdLabel, uuidv4()))
+        const uniqueId = await this.userService.getUuid()
         return this.filenameFromUuid(uniqueId, extension)
     }
 

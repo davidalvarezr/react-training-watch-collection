@@ -95,7 +95,6 @@ export class WatchService implements IWatchService {
         watches: Watch[],
         filename: string
     ): Promise<DropboxResponse<files.FileMetadata>> {
-        console.log("watches", watches)
         const blob = new Blob([JSON.stringify(watches)], {
             type: "octet/stream",
         })

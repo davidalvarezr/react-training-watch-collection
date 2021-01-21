@@ -16,7 +16,8 @@ export const consoleService = new ConsoleService(consoleConfig)
 const dbx = new Dropbox({ accessToken: dropboxConfig.ACCESS_TOKEN })
 
 export const storageService = new LocalStorageService(localStorage)
-export const fileService = new FileService(EXTENSION, storageService, UNIQUE_ID)
+export const userService = new UserService(storageService, UNIQUE_ID)
+export const fileService = new FileService(EXTENSION, storageService, UNIQUE_ID, userService)
 export const watchService = new WatchService(
     dbx,
     DIRECTORY,
@@ -24,4 +25,3 @@ export const watchService = new WatchService(
     storageService,
     fileService
 )
-export const userService = new UserService(storageService, UNIQUE_ID)

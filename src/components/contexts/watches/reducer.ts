@@ -64,7 +64,6 @@ export const reducer: Reducer = (state, action) => {
                 initializeError: undefined,
             }
         case WatchesAction.INITIALIZE_SUCCESS: {
-            console.log("action.payload", action.payload)
             const { watches, uuid } = action.payload
             return { ...state, watches, uuid, initializing: false }
         }
