@@ -25,7 +25,7 @@ const colProps: ColProps = {
 
 export const SettingsPage: React.FC = () => {
     const {
-        watches: { uploading, uploadError, downloading, downloadError },
+        state: { uploading, uploadError, downloading, downloadError },
         dispatch,
     } = useContext(WatchesContext)
 

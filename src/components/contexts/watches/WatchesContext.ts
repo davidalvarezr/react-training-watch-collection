@@ -3,7 +3,7 @@ import { Provider } from "./WatchesProvider"
 import { initialState } from "./state"
 
 const initialContextState: Provider = {
-    watches: initialState,
+    state: initialState,
 }
 
 export const WatchesContext = React.createContext<Provider>(initialContextState)

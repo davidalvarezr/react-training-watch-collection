@@ -17,7 +17,7 @@ const LOADING_MESSAGE = "Watches are being loaded from the local storage"
  */
 export const WatchFormPage = (): ReactElement => {
     const {
-        watches: { watches, initializing },
+        state: { watches, initializing },
         dispatch,
     } = useContext(WatchesContext)
 

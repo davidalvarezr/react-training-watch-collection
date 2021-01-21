@@ -6,7 +6,7 @@ import { dispatchMiddleware, reducer } from "~/src/components/contexts/watches/r
 import { Reducer } from "./reducer"
 
 export type Provider = {
-    watches: State
+    state: State
     dispatch?: Dispatch<WatchAction>
 }
 
@@ -16,7 +16,7 @@ export const WatchesProvider: React.FC<PropTypes> = ({ children }: PropTypes) =>
     const [watches, dispatch] = useReducer<Reducer>(reducer, initialState)
 
     return (
-        <WatchesContext.Provider value={{ watches, dispatch: dispatchMiddleware(dispatch) }}>
+        <WatchesContext.Provider value={{ state: watches, dispatch: dispatchMiddleware(dispatch) }}>
             {children}
         </WatchesContext.Provider>
     )

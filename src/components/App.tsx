@@ -17,7 +17,7 @@ const { Content, Footer } = Layout
 
 export const App: React.FC = () => {
     const {
-        watches: { initializing },
+        state: { initializing },
         dispatch,
     } = useContext(WatchesContext)
 

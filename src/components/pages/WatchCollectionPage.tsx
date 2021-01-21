@@ -10,7 +10,7 @@ import { VerticalSpace } from "~/src/components/blocks/VerticalSpace"
 
 export const WatchCollectionPage: React.FC = () => {
     const {
-        watches: { watches, initializing },
+        state: { watches, initializing },
         dispatch,
     } = useContext(WatchesContext)
 
