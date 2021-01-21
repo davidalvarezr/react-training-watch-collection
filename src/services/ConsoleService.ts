@@ -13,6 +13,8 @@ const defaultConfig: ConsoleConfig = {
 }
 
 export class ConsoleService implements IConsoleService {
+    private lastLogAction?: number
+
     constructor(private config: ConsoleConfig) {
         this.config = { ...defaultConfig, ...config }
     }
@@ -29,9 +31,19 @@ export class ConsoleService implements IConsoleService {
         console.error(...data)
     }
 
-    logAction(...data: unknown[]): void {
+    logAction(action, state: Record<string, unknown>): void {
         if (!this.config.logAction) return
         // eslint-disable-next-line no-console
-        console.info(...data)
+        console.info(action, state, this.offset())
+    }
+
+    private offset() {
+        if (!this.lastLogAction) {
+            this.lastLogAction = Date.now()
+            return 0
+        }
+        const lastLogAction = this.lastLogAction
+        this.lastLogAction = Date.now()
+        return this.lastLogAction - lastLogAction
     }
 }

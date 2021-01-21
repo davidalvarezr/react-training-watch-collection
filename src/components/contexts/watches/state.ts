@@ -15,7 +15,7 @@ export type State = {
 
 export const initialState: State = {
     watches: [],
-    localStorageRetrieveLoading: false,
+    localStorageRetrieveLoading: false, // FIXME: rename to "initializing"
     initialized: false,
     uploading: false,
     downloading: false,

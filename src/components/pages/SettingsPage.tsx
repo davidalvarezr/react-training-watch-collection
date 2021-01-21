@@ -1,4 +1,4 @@
-import React, { CSSProperties, useContext, useEffect, useState } from "react"
+import React, { useContext, useEffect, useState } from "react"
 import { useUniqueId } from "~/src/components/hooks/useUniqueId"
 import { DownloadWatch } from "~/src/components/blocks/DownloadWatch"
 import { LoadWrapper } from "~/src/components/blocks/LoadWrapper"
@@ -37,12 +37,10 @@ export const SettingsPage: React.FC = () => {
     }, [uniqueId])
 
     const upload = () => {
-        console.log("clicked on upload")
         dispatch({ type: WatchesAction.UPLOAD })
     }
 
     const download = (id: string) => {
-        console.log("clicked on download")
         dispatch({ type: WatchesAction.DOWNLOAD, payload: id })
     }
 
@@ -75,7 +73,6 @@ export const SettingsPage: React.FC = () => {
                 <Col {...colProps}>
                     <LoadWrapper
                         isLoading={uploading}
-                        loadingComponent={<LoadingOutlined style={{ fontSize: "32px" }} />}
                         loadingMessage="Uploading watches..."
                         errorMessage={uploadError}
                     >
@@ -91,7 +88,6 @@ export const SettingsPage: React.FC = () => {
                 <Col {...colProps}>
                     <LoadWrapper
                         isLoading={downloading || downloadInput === null}
-                        loadingComponent={<LoadingOutlined style={{ fontSize: "32px" }} />}
                         loadingMessage="Downloading watches..."
                         errorMessage={downloadError}
                     >

@@ -1,6 +1,7 @@
 import React, { PropsWithChildren, ReactNode } from "react"
 import { ErrorDisplayer, ErrorMessage } from "~/src/components/blocks/ErrorDisplayer"
 import { LoadingOutlined } from "@ant-design/icons"
+import { Simulate } from "react-dom/test-utils"
 
 type LoadingComponentProps = { message?: string }
 
@@ -52,10 +53,14 @@ export const LoadWrapper: React.FC<PropTypes> = (props: PropTypes) => {
 
     if (isLoading) {
         if (loadingComponent) {
+            const CustomLoadingComponent = loadingComponent
+
+            // console.log("in here")
+
             return (
                 <div>
-                    {loadingComponent}
-                    <LoadingComponent message={loadingMessage} />
+                    {/*@ts-ignore*/}
+                    <CustomLoadingComponent />
                 </div>
             )
         } else {

@@ -9,7 +9,9 @@ import { v4 as uuidv4 } from "uuid"
 type DispatchReturn = (action: WatchAction) => void
 type DispatchMiddleware = (dispatch: React.Dispatch<WatchAction>) => DispatchReturn
 
-// Handles asynchronous dispatches
+export type Reducer = (state: State, action: WatchAction) => State
+
+// Handles asynchronous actions
 export const dispatchMiddleware: DispatchMiddleware = (dispatch) => {
     return (action) => {
         switch (action.type) {
@@ -51,8 +53,6 @@ export const dispatchMiddleware: DispatchMiddleware = (dispatch) => {
         }
     }
 }
-
-export type Reducer = (state: State, action: WatchAction) => State
 
 export const reducer: Reducer = (state, action) => {
     consoleService.logAction(action, state)
