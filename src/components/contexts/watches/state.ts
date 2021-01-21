@@ -6,7 +6,6 @@ export type State = {
     watches: Watch[]
     initializing: boolean
     localStorageRetrieveError?: ErrorMessage
-    initialized: boolean
     uploading: boolean
     uploadError?: DropboxErrorFinalMessage
     downloading: boolean
@@ -16,7 +15,6 @@ export type State = {
 export const initialState: State = {
     watches: [],
     initializing: false, // FIXME: rename to "initializing"
-    initialized: false,
     uploading: false,
     downloading: false,
 }
