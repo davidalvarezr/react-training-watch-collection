@@ -3,7 +3,7 @@ import { useUniqueId } from "~/src/components/hooks/useUniqueId"
 import { DownloadWatch } from "~/src/components/blocks/DownloadWatch"
 import { LoadWrapper } from "~/src/components/blocks/LoadWrapper"
 import { DownloadOutlined, LoadingOutlined, UploadOutlined } from "@ant-design/icons"
-import { WatchesContext } from "~/src/components/contexts/watches/WatchesContext"
+import { MainContext } from "~/src/components/contexts/watches/MainContext"
 import { WatchesAction } from "~/src/components/contexts/watches/actions"
 import { Button, Col, Divider, Row, Typography } from "antd"
 import { ColProps, RowProps } from "antd/es/grid"
@@ -27,7 +27,7 @@ export const SettingsPage: React.FC = () => {
     const {
         state: { uploading, uploadError, downloading, downloadError },
         dispatch,
-    } = useContext(WatchesContext)
+    } = useContext(MainContext)
 
     // Unique ID state and effect ---------------
     const [uniqueId] = useUniqueId()

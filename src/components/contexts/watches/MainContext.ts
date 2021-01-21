@@ -6,4 +6,4 @@ const initialContextState: Provider = {
     state: initialState,
 }
 
-export const WatchesContext = React.createContext<Provider>(initialContextState)
+export const MainContext = React.createContext<Provider>(initialContextState)

@@ -3,7 +3,7 @@ import React, { ReactElement, useContext, useMemo } from "react"
 import { useParams } from "react-router-dom"
 import { Watch } from "~/src/types/Watch"
 import { Mode } from "~/src/types/Mode"
-import { WatchesContext } from "~/src/components/contexts/watches/WatchesContext"
+import { MainContext } from "~/src/components/contexts/watches/MainContext"
 import { WatchesAction } from "~/src/components/contexts/watches/actions"
 import { links } from "~/src/config/links"
 import { useHistory } from "react-router-dom"
@@ -19,7 +19,7 @@ export const WatchFormPage = (): ReactElement => {
     const {
         state: { watches, initializing },
         dispatch,
-    } = useContext(WatchesContext)
+    } = useContext(MainContext)
 
     // Retrieve info from url
     const history = useHistory()

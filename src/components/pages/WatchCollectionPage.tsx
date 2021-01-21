@@ -3,7 +3,7 @@ import { Link } from "react-router-dom"
 import { Button, Space } from "antd"
 import { WatchList } from "~/src/components/blocks/WatchList"
 import { links } from "~/src/config/links"
-import { WatchesContext } from "~/src/components/contexts/watches/WatchesContext"
+import { MainContext } from "~/src/components/contexts/watches/MainContext"
 import { WatchesAction } from "~/src/components/contexts/watches/actions"
 import { LoadWrapper } from "~/src/components/blocks/LoadWrapper"
 import { VerticalSpace } from "~/src/components/blocks/VerticalSpace"
@@ -12,7 +12,7 @@ export const WatchCollectionPage: React.FC = () => {
     const {
         state: { watches, initializing },
         dispatch,
-    } = useContext(WatchesContext)
+    } = useContext(MainContext)
 
     const clearList = () => {
         if (confirm("Do you really want to clear your list of watches ?")) {

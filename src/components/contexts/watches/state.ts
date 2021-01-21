@@ -14,7 +14,7 @@ export type State = {
 
 export const initialState: State = {
     watches: [],
-    initializing: false, // FIXME: rename to "initializing"
+    initializing: true,
     uploading: false,
     downloading: false,
 }

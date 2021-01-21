@@ -1,5 +1,5 @@
 import React, { Dispatch, ReactNode, useReducer } from "react"
-import { WatchesContext } from "./WatchesContext"
+import { MainContext } from "./MainContext"
 import { WatchAction } from "./actions"
 import { initialState, State } from "./state"
 import { dispatchMiddleware, reducer } from "~/src/components/contexts/watches/reducer"
@@ -16,8 +16,8 @@ export const WatchesProvider: React.FC<PropTypes> = ({ children }: PropTypes) =>
     const [watches, dispatch] = useReducer<Reducer>(reducer, initialState)
 
     return (
-        <WatchesContext.Provider value={{ state: watches, dispatch: dispatchMiddleware(dispatch) }}>
+        <MainContext.Provider value={{ state: watches, dispatch: dispatchMiddleware(dispatch) }}>
             {children}
-        </WatchesContext.Provider>
+        </MainContext.Provider>
     )
 }
