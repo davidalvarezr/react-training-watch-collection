@@ -1,34 +1,51 @@
-import {TWatchItem} from "~/src/types/TWatchItem";
-import {DropboxResponse, files} from "dropbox";
-import DownloadError = files.DownloadError;
+import { Watch } from "~/src/types/Watch"
 
 export default interface IWatchService {
-    addWatch(watch: TWatchItem)
-    clearList()
+    addWatch(watch: Watch): Promise<Watch[]>
+
+    /**
+     * Clears the watch list and returns it
+     */
+    clearList(): Promise<Watch[]>
 
     /**
      * Get the watch list from the local storage
      */
-    getWatchList(): TWatchItem[]
+    getWatchList(): Promise<Watch[]>
 
     /**
-     * Replaces the watchList
+     * Set/replaces the watchList and returns it
      * @param watchList
      */
-    setWatchList(watchList: TWatchItem[])
-    getWatch(uuid: string): TWatchItem
-    removeWatch(uuid: string)
-    updateWatch(uuid: string, watch: TWatchItem)
+    setWatchList(watchList: Watch[]): Promise<Watch[]>
 
     /**
-     * Upload a file to Dropbox
-     * @param watches the array of watches to upload
-     * @param filename (with extension). Best if randomly generated so that a lot of users can find their own lists, and
-     * uploading the list would not result in an overwrite of another user's list. The randomly generated filename
-     * should be stored in the local storage of the user so he can retrieve/update (sync) it easily
+     * Get a watch from the list
+     * @param uuid the uuid of the watch
      */
-    uploadList(watches: TWatchItem[], filename: string): Promise<DropboxResponse<files.FileMetadata>>
-    downloadList(filename: string): Promise<TWatchItem[]>
+    getWatch(uuid: string): Promise<Watch>
 
-    isWatchListEmpty(): boolean
+    /**
+     * Removes the watch from the list and returns the new watch list
+     * @param uuid the uuid of the watch
+     */
+    removeWatch(uuid: string): Promise<Watch[]>
+
+    /**
+     * Updates a watch and return the watch list
+     * @param uuid the uuid of the watch
+     * @param watch the new watch
+     */
+    updateWatch(uuid: string, watch: Watch): Promise<Watch[]>
+
+    sendListOnline(): Promise<Watch[]>
+
+    /**
+     * Fetches watches form the cloud and store it in local storage
+     * @param filename
+     * @return the watches that have been fetched and stored
+     */
+    persistWatchesFromCloud(filename?: string): Promise<Watch[]>
+
+    isWatchListEmpty(): Promise<boolean>
 }

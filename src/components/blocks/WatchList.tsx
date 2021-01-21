@@ -1,26 +1,17 @@
-import React, {Fragment} from "react"
-import {TWatchItem} from "~/src/types/TWatchItem";
-import {WatchItem} from "~/src/components/blocks/WatchItem";
-import {Space} from "antd";
-import {Mode} from "~/src/types/Mode";
+import React, { Fragment } from "react"
+import { Watch } from "~/src/types/Watch"
+import { WatchItem } from "~/src/components/blocks/WatchItem"
+import { Space } from "antd"
+import { Mode } from "~/src/types/Mode"
 
 export const WatchList = (props: PropsType) => {
-    const watches = props.watches.map(watch =>
-        <WatchItem
-            key={watch.uuid}
-            watch={watch}
-            mode={Mode.Show}
-        />
-    )
+    const watches = props.watches.map((watch) => (
+        <WatchItem key={watch.uuid} watch={watch} mode={Mode.SHOW} />
+    ))
 
-    return <Fragment>
-        <Space direction="vertical" >
-            {watches}
-        </Space>
-    </Fragment>
+    return <Space direction="vertical">{watches}</Space>
 }
 
-
 type PropsType = {
-    watches: TWatchItem[]
+    watches: Watch[]
 }

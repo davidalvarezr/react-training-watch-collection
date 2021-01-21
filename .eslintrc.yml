@@ -1,0 +1,22 @@
+root: true
+parser: "@typescript-eslint/parser"
+parserOptions:
+  ecmaFeatures:
+    jsx: true
+plugins:
+  - react
+  - "@typescript-eslint"
+extends:
+  - eslint:recommended
+  - prettier
+  - prettier/@typescript-eslint
+  - plugin:@typescript-eslint/recommended
+  - plugin:react/recommended
+  - plugin:react-hooks/recommended
+
+rules:
+  no-console: warn
+  no-magic-numbers: warn
+  require-await: warn
+  react/jsx-uses-react: error
+  react/jsx-uses-vars: error

@@ -2,23 +2,32 @@
   "name": "react-training-watch-collection",
   "scripts": {
     "start": "parcel serve ./src/index.html",
-    "build": "parcel build ./src/index.html"
+    "build": "parcel build ./src/index.html --public-url ./"
   },
   "dependencies": {
     "@ant-design/icons": "^4.3.0",
     "@bytesoftio/helpers-input": "^1.1.0",
-    "@types/node": "^14.14.20",
+    "@types/node": "^14.14.21",
     "@types/react": "^17.0.0",
     "@types/react-dom": "^17.0.0",
+    "@welldone-software/why-did-you-render": "^6.0.5",
     "antd": "^4.10.0",
     "dropbox": "^8.2.0",
-    "react": "^16.13.1",
+    "react": "^17.0.1",
     "react-dom": "16.13.1",
     "react-router-dom": "^5.2.0",
     "uuid": "^8.3.2"
   },
   "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^4.13.0",
+    "@typescript-eslint/parser": "^4.13.0",
+    "eslint": "^7.17.0",
+    "eslint-config-prettier": "^7.1.0",
+    "eslint-plugin-react": "^7.22.0",
+    "eslint-plugin-react-hooks": "^4.2.0",
     "parcel": "next",
+    "prettier": "^2.2.1",
+    "react-context-devtool": "^2.0.2",
     "typescript": "^4.1.3"
   }
 }

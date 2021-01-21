@@ -1,5 +1,5 @@
 export enum Mode {
-    Add = 'add',
-    Show = 'show',
-    Edit = 'edit',
+    ADD = "ADD",
+    SHOW = "SHOW",
+    EDIT = "EDIT",
 }

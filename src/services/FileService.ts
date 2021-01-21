@@ -1,45 +1,66 @@
-import {IFileService} from "~/src/services/IFileService";
+import { IFileService } from "~/src/services/IFileService"
+import { ILocalStorageService } from "~/src/services/ILocalStorageService"
+import { UserService } from "~/src/services/UserService"
 
-export const FileService: IFileService = {
+export class FileService implements IFileService {
+    /**
+     *
+     * @param extension the file extension on dropbox
+     * @param storage
+     * @param uniqueIdLabel the label under which the unique id of the user will be stored
+     * @param userService
+     */
+    constructor(
+        private extension: string,
+        private storage: ILocalStorageService,
+        private uniqueIdLabel: string,
+        private userService: UserService
+    ) {}
 
-    toBase64: (file) => new Promise((resolve, reject) => {
-        if ([null, undefined].includes(file)) return null
+    toBase64(file: File): Promise<string> {
+        return new Promise<string>((resolve, reject) => {
+            if ([null, undefined].includes(file)) return null
 
-        const reader = new FileReader();
-        reader.readAsDataURL(file);
+            const reader = new FileReader()
+            reader.readAsDataURL(file)
 
-        reader.onload = () => {
-            // console.log(typeof reader.result, reader.result)
-            if (typeof reader.result !== 'string') {
-                throw new TypeError()
+            reader.onload = () => {
+                // console.log(typeof reader.result, reader.result)
+                if (typeof reader.result !== "string") {
+                    throw new Error("reader.result wrong type")
+                }
+                resolve(reader.result as string)
             }
-            resolve(reader.result as string);
-        }
-        reader.onerror = error => reject(error);
-    }),
+            reader.onerror = (error) => reject(error)
+        })
+    }
 
-    dataUrlToFileObject: (dataurl, filename) => {
+    dataUrlToFileObject(dataurl: string, filename: string): File {
         if ([null, undefined].includes(dataurl)) return null
 
-        let arr = dataurl.split(','),
-            mime = arr[0].match(/:(.*?);/)[1],
-            bstr = atob(arr[1]),
-            n = bstr.length,
-            u8arr = new Uint8Array(n);
+        const arr = dataurl.split(",")
+        const mime = arr[0].match(/:(.*?);/)[1]
+        const bstr = atob(arr[1])
+        let n = bstr.length
+        const u8arr = new Uint8Array(n)
 
-        const t0 = Date.now()
         while (n--) {
-            u8arr[n] = bstr.charCodeAt(n);
+            u8arr[n] = bstr.charCodeAt(n)
         }
-        const t1 = Date.now()
 
-        console.log('Loading of file from base64 to file took ', (t1-t0)/1000, ' s')
-
-        return new File([u8arr], filename, {type: mime});
-    },
+        return new File([u8arr], filename, { type: mime })
+    }
 
     fileUrl(file: File): string {
         return URL.createObjectURL(file)
     }
 
+    async getFilenameFromCurrentUser(extension = this.extension): Promise<string> {
+        const uniqueId = await this.userService.getUuid()
+        return this.filenameFromUuid(uniqueId, extension)
+    }
+
+    filenameFromUuid(uuid: string, extension = this.extension): string {
+        return `${uuid}${extension}`
+    }
 }

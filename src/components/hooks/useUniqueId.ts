@@ -1,41 +1,31 @@
-import {UNIQUE_ID} from "~/src/const/localStorageLabels";
-import { v4 as uuidv4 } from 'uuid';
-
-// FIXME: Should I use state ? Why ?
+import { useEffect, useMemo, useState } from "react"
+import { UNIQUE_ID } from "~/src/config/labels"
+import { useLocalStorageService } from "~/src/components/hooks/useLocalStorageService"
+import { v4 as uuidv4 } from "uuid"
 
 type UseUniqueId = () => [string, boolean]
 
-/**
- * Identifies the user of the app.
- * The unique id is used in order to find its file online (<unique_id>.json)
- */
 export const useUniqueId: UseUniqueId = () => {
-    console.log('useUniqueId')
+    const storage = useLocalStorageService()
 
-    let uniqueId: string = null
-    let isNew: boolean = false
+    // Will get the unique id stored in the local storage
+    const [uniqueId, setUniqueId] = useState<string>(null)
+    const [isLoading, setLoading] = useState<boolean>(true)
 
-    const getUniqueId = () => {
-        const id = localStorage.getItem(UNIQUE_ID)
-        if (id === null) {
-            generateUniqueId()
-        } else {
-            uniqueId = id
+    useEffect(() => {
+        setLoading(true)
+        const loadUniqueId = async () => {
+            let id = await storage.getItemAsString(UNIQUE_ID)
+            if (id === null) {
+                id = uuidv4()
+                await storage.setItem(UNIQUE_ID, id)
+            }
+            setUniqueId(id)
+            setLoading(false)
         }
-    }
 
-    const generateUniqueId = () => {
-        if (localStorage.getItem(UNIQUE_ID) !== null) {
-            console.error('Unique id already exist for this user. Not generating a new one...')
-            uniqueId = localStorage.getItem(UNIQUE_ID)
-            return
-        }
-        isNew = true
+        loadUniqueId()
+    }, [uniqueId])
 
-        uniqueId = uuidv4()
-        localStorage.setItem(UNIQUE_ID, uniqueId)
-    }
-
-    getUniqueId()
-    return [uniqueId, isNew]
+    return [uniqueId, isLoading]
 }

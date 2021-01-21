@@ -1,16 +1,15 @@
-import React, {CSSProperties, useMemo} from "react"
-import {TWatchItem} from "~/src/types/TWatchItem"
-import {Button, Card, Space} from "antd"
-import {Link, useHistory} from "react-router-dom"
-import {useWatchService} from "~/src/components/hooks/useWatchService";
-import {links} from "~/src/config/links";
-import {Mode} from "~/src/types/Mode";
-import {ImagePreview} from "~/src/components/blocks/ImagePreview";
-import {useFileService} from "~/src/components/hooks/useFileService";
+import React, { CSSProperties, useMemo } from "react"
+import { Watch } from "~/src/types/Watch"
+import { Button, Card, Space } from "antd"
+import { Link, useHistory } from "react-router-dom"
+import { useWatchService } from "~/src/components/hooks/useWatchService"
+import { links } from "~/src/config/links"
+import { Mode } from "~/src/types/Mode"
+import { ImagePreview } from "~/src/components/blocks/ImagePreview"
+import { useFileService } from "~/src/components/hooks/useFileService"
 
-
-type PropsType = {
-    watch: TWatchItem
+type PropTypes = {
+    watch: Watch
     mode: Mode
 }
 
@@ -18,22 +17,21 @@ const style: CSSProperties = {
     width: "500px",
 }
 
-
 // The display of one watch item in the list
-export const WatchItem = ({watch, mode}: PropsType) => {
+export const WatchItem = ({ watch, mode }: PropTypes) => {
     const history = useHistory()
     const watchService = useWatchService()
     const fileService = useFileService()
-    const {brand, description, model, priceBought, uuid} = watch
+    const { brand, description, model, priceBought, uuid } = watch
 
     let image = null
     if (watch.image) {
-        image = useMemo(() => fileService.dataUrlToFileObject(watch.image, 'watch'), [watch.image])
+        image = useMemo(() => fileService.dataUrlToFileObject(watch.image, "watch"), [watch.image])
     }
 
-    function deleteWatch() {
+    const deleteWatch = async () => {
         if (!confirm("Do you really want to delete this watch ?")) return
-        watchService.removeWatch(uuid)
+        await watchService.removeWatch(uuid)
         history.push(links.watchCollection())
     }
 
@@ -57,12 +55,12 @@ export const WatchItem = ({watch, mode}: PropsType) => {
 
     const controls = () => {
         switch (mode) {
-            case Mode.Show:
+            case Mode.SHOW:
                 return showControls
-            case Mode.Edit:
+            case Mode.EDIT:
                 return editControls
             default:
-                return 'ERROR'
+                return "ERROR"
         }
     }
 
@@ -71,8 +69,8 @@ export const WatchItem = ({watch, mode}: PropsType) => {
             <h2>{brand}</h2>
             <h3>{model}</h3>
             <p>{description}</p>
-            {priceBought !== '' && <p>Bought at: {priceBought}$</p>}
-            <ImagePreview file={image}/>
+            {priceBought !== "" && <p>Bought at: {priceBought}$</p>}
+            <ImagePreview file={image} />
             {controls()}
         </Card>
     )

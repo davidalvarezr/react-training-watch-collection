@@ -1,91 +1,104 @@
-import React, {ChangeEvent, Fragment, useMemo, useState} from "react"
-import {useWatchService} from "~/src/components/hooks/useWatchService";
-import {useUniqueId} from "~/src/components/hooks/useUniqueId";
-import {useLoading} from "~/src/components/hooks/useLoading";
-import {ErrorDisplayer} from "~/src/components/blocks/ErrorDisplayer";
-import {useErrorMapper} from "~/src/components/hooks/useErrorMapper";
+import React, { useContext, useEffect, useState } from "react"
+import { useUniqueId } from "~/src/components/hooks/useUniqueId"
+import { DownloadWatch } from "~/src/components/blocks/DownloadWatch"
+import { LoadWrapper } from "~/src/components/blocks/LoadWrapper"
+import { DownloadOutlined, UploadOutlined } from "@ant-design/icons"
+import { MainContext } from "~/src/components/contexts/watches/MainContext"
+import { WatchesAction } from "~/src/components/contexts/watches/actions"
+import { Button, Col, Divider, Row, Typography } from "antd"
+import { ColProps, RowProps } from "antd/es/grid"
+import Paragraph from "antd/es/typography/Paragraph"
+import { VerticalSpace } from "~/src/components/blocks/VerticalSpace"
 
-export const SettingsPage = () => {
+const { Text } = Typography
 
-    const watchService = useWatchService()
+const rowProps: RowProps = {
+    gutter: [16, 16],
+    justify: "center",
+}
 
-    // FIXME: is it correct to use useMemo here, because we don't want the function to execute at each update ?
-    const [uniqueId] = useMemo(() => useUniqueId(), [])
-    const [downloadCode, setDownloadCode] = useState(uniqueId)
-    const [isUploading, errorUpload, beginUpload, endUpload, errorWhileUploading] = useLoading(false)
-    const [isDownloading, errorDownload, beginDownload, endDownload, errorWhileDownloading] = useLoading(false)
-    const [msgFromError] = useErrorMapper()
+const colProps: ColProps = {
+    xs: 24,
+    md: 18,
+    lg: 14,
+}
 
-    const filename = `${uniqueId}.json` // the filename to be uploaded
-    const getFilename = (id) => `${id}.json` // the filename to be downloaded
+export const SettingsPage: React.FC = () => {
+    const {
+        state: { uploading, uploadError, downloading, downloadError, uuid },
+        dispatch,
+    } = useContext(MainContext)
 
-    const uploadWatches = async () => {
-        beginUpload()
-        try {
-            await watchService.uploadList(watchService.getWatchList(), filename)
-        } catch (e) {
-            errorWhileUploading(msgFromError(e))
-        }
-        endUpload()
+    // Unique ID state and effect ---------------
+    const [downloadInput, setDownloadInput] = useState(uuid)
+    useEffect(() => {
+        setDownloadInput(uuid)
+    }, [uuid])
+
+    const upload = () => {
+        dispatch({ type: WatchesAction.UPLOAD })
     }
 
-    const downloadWatches = async () => {
-        if (!watchService.isWatchListEmpty()
-            && !confirm("Downloading your list from the cloud will erase the one you actually have in the app")) {
-            return
-        }
-        beginDownload()
-        try {
-            const watchList = await watchService.downloadList(getFilename(downloadCode))
-            watchService.setWatchList(watchList)
-        } catch (e) {
-            errorWhileDownloading(msgFromError(e))
-        }
-        endDownload()
+    const download = (id: string) => {
+        dispatch({ type: WatchesAction.DOWNLOAD, payload: id })
     }
-
-    const handleInput = (e: ChangeEvent<HTMLInputElement>) => { setDownloadCode(e.target.value) }
 
     return (
-        <div>
-            <p>Your code: {uniqueId}</p>
+        <>
+            <Divider orientation="left">Your code: {uuid}</Divider>
 
-            {/*UPLOAD -----------------------------------------------------------------------------------------------*/}
+            <Typography>
+                <Paragraph>
+                    Your code is a unique identifier that allows you to share your list across
+                    different computers.
+                </Paragraph>
+                <Paragraph>
+                    Click{" "}
+                    <Text code>
+                        <UploadOutlined /> Upload
+                    </Text>{" "}
+                    to save your list on the cloud
+                </Paragraph>
+                <Paragraph>
+                    If your list is already on the cloud, you can <DownloadOutlined />
+                    <Text code>Download</Text> it using your code
+                </Paragraph>
+            </Typography>
 
-            {!isUploading ?
-                <button onClick={uploadWatches}>
-                    upload
-                </button> :
-                <p>Your file is uploading...</p>
-            }
+            <VerticalSpace />
 
-            {errorUpload && <ErrorDisplayer message={errorUpload} />}
+            {/*UPLOAD -------------------------------------------------------*/}
+            <Row {...rowProps}>
+                <Col {...colProps}>
+                    <LoadWrapper
+                        isLoading={uploading}
+                        loadingMessage="Uploading watches..."
+                        errorMessage={uploadError}
+                    >
+                        <Button type="primary" onClick={upload} icon={<UploadOutlined />}>
+                            Upload
+                        </Button>
+                    </LoadWrapper>
+                </Col>
+            </Row>
 
-            <br/>
-
-            {/*DOWNLOAD ---------------------------------------------------------------------------------------------*/}
-
-            {!isDownloading ?
-                (
-                    <Fragment>
-                        <button onClick={downloadWatches}>
-                            download
-                        </button>
-                        <input
-                            type="text"
-                            placeholder="code"
-                            onChange={handleInput}
-                            value={downloadCode}
-                            style={{width: '300px', maxWidth: '100%'}}
+            {/*DOWNLOAD -----------------------------------------------------*/}
+            <Row {...rowProps}>
+                <Col {...colProps}>
+                    <LoadWrapper
+                        isLoading={downloading || downloadInput === null}
+                        loadingMessage="Downloading watches..."
+                        errorMessage={downloadError}
+                    >
+                        <DownloadWatch
+                            initialId={uuid}
+                            id={downloadInput}
+                            onDownload={download}
+                            onChange={setDownloadInput}
                         />
-                    </Fragment>
-
-                ) :
-                <p>Your file is downloading...</p>
-            }
-
-            {errorDownload && <ErrorDisplayer message={errorDownload} />}
-
-        </div>
+                    </LoadWrapper>
+                </Col>
+            </Row>
+        </>
     )
 }
