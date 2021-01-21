@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from "react"
 import { useUniqueId } from "~/src/components/hooks/useUniqueId"
 import { DownloadWatch } from "~/src/components/blocks/DownloadWatch"
 import { LoadWrapper } from "~/src/components/blocks/LoadWrapper"
-import { DownloadOutlined, LoadingOutlined, UploadOutlined } from "@ant-design/icons"
+import { DownloadOutlined, UploadOutlined } from "@ant-design/icons"
 import { MainContext } from "~/src/components/contexts/watches/MainContext"
 import { WatchesAction } from "~/src/components/contexts/watches/actions"
 import { Button, Col, Divider, Row, Typography } from "antd"
@@ -14,27 +14,26 @@ const { Text } = Typography
 
 const rowProps: RowProps = {
     gutter: [16, 16],
-    justify: "space-around",
+    justify: "center",
 }
 
 const colProps: ColProps = {
     xs: 24,
-    md: 16,
-    lg: 12,
+    md: 18,
+    lg: 14,
 }
 
 export const SettingsPage: React.FC = () => {
     const {
-        state: { uploading, uploadError, downloading, downloadError },
+        state: { uploading, uploadError, downloading, downloadError, uuid },
         dispatch,
     } = useContext(MainContext)
 
     // Unique ID state and effect ---------------
-    const [uniqueId] = useUniqueId()
-    const [downloadInput, setDownloadInput] = useState(uniqueId)
+    const [downloadInput, setDownloadInput] = useState(uuid)
     useEffect(() => {
-        setDownloadInput(uniqueId)
-    }, [uniqueId])
+        setDownloadInput(uuid)
+    }, [uuid])
 
     const upload = () => {
         dispatch({ type: WatchesAction.UPLOAD })
@@ -46,7 +45,7 @@ export const SettingsPage: React.FC = () => {
 
     return (
         <>
-            <Divider orientation="left">Your code: {uniqueId}</Divider>
+            <Divider orientation="left">Your code: {uuid}</Divider>
 
             <Typography>
                 <Paragraph>
@@ -92,6 +91,7 @@ export const SettingsPage: React.FC = () => {
                         errorMessage={downloadError}
                     >
                         <DownloadWatch
+                            initialId={uuid}
                             id={downloadInput}
                             onDownload={download}
                             onChange={setDownloadInput}

@@ -1,9 +1,10 @@
-import React, { ChangeEvent, Fragment, useState } from "react"
-import { Button, Input } from "antd"
+import React, { ChangeEvent, Fragment, useRef, useState } from "react"
+import { Button, Col, Input, Row } from "antd"
 import Search from "antd/es/input/Search"
 import { DownloadOutlined } from "@ant-design/icons"
 
 type PropTypes = {
+    initialId: string
     id: string
     onDownload: (id: string) => void
     onChange?: (id: string) => void
@@ -11,7 +12,12 @@ type PropTypes = {
 
 const suffix = <DownloadOutlined />
 
-export const DownloadWatch: React.FC<PropTypes> = ({ id, onDownload, onChange }: PropTypes) => {
+export const DownloadWatch: React.FC<PropTypes> = ({
+    initialId,
+    id,
+    onDownload,
+    onChange,
+}: PropTypes) => {
     const [inputValue, setInputValue] = useState<string>(id)
 
     const onDownloadInputChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -20,15 +26,35 @@ export const DownloadWatch: React.FC<PropTypes> = ({ id, onDownload, onChange }:
         if (onChange) onChange(value)
     }
 
+    const isInputSameAsInit = () => initialId === inputValue
+
+    const resetInputToInitialValue = () => {
+        setInputValue(initialId)
+    }
+
     return (
-        <Search
-            placeholder="code"
-            enterButton="Download"
-            size="middle"
-            suffix={suffix}
-            onSearch={onDownload}
-            onChange={onDownloadInputChange}
-            value={inputValue}
-        />
+        <>
+            <Row>
+                <Col flex={"auto"}>
+                    <Search
+                        placeholder="code"
+                        enterButton="Download"
+                        size="middle"
+                        suffix={suffix}
+                        onSearch={onDownload}
+                        onChange={onDownloadInputChange}
+                        value={inputValue}
+                    />
+                </Col>
+
+                <Col flex={"66px"}>
+                    {!isInputSameAsInit() && (
+                        <Button onClick={resetInputToInitialValue} type={"primary"} danger>
+                            Reset
+                        </Button>
+                    )}
+                </Col>
+            </Row>
+        </>
     )
 }
