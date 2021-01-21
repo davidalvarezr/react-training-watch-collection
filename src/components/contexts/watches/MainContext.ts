@@ -1,5 +1,5 @@
 import React from "react"
-import { Provider } from "./WatchesProvider"
+import { Provider } from "./MainProvider"
 import { initialState } from "./state"
 
 const initialContextState: Provider = {

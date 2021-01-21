@@ -12,7 +12,7 @@ export type Provider = {
 
 type PropTypes = { children: ReactNode }
 
-export const WatchesProvider: React.FC<PropTypes> = ({ children }: PropTypes) => {
+export const MainProvider: React.FC<PropTypes> = ({ children }: PropTypes) => {
     const [watches, dispatch] = useReducer<Reducer>(reducer, initialState)
 
     return (

@@ -2,14 +2,14 @@ import "../wdyr"
 import React from "react"
 import { render } from "react-dom"
 import { App } from "~/src/components/App"
-import { WatchesProvider } from "~/src/components/contexts/watches/WatchesProvider"
+import { MainProvider } from "~/src/components/contexts/watches/MainProvider"
 // import { debugContextDevtool } from "react-context-devtool"
 
 const AppWithProviders = () => {
     return (
-        <WatchesProvider>
+        <MainProvider>
             <App />
-        </WatchesProvider>
+        </MainProvider>
     )
 }
 
