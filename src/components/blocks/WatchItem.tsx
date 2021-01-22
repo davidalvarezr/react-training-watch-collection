@@ -18,16 +18,15 @@ const style: CSSProperties = {
 }
 
 // The display of one watch item in the list
-export const WatchItem = ({ watch, mode }: PropTypes) => {
+export const WatchItem: React.FC<PropTypes> = ({ watch, mode }: PropTypes) => {
     const history = useHistory()
     const watchService = useWatchService()
     const fileService = useFileService()
     const { brand, description, model, priceBought, uuid } = watch
 
-    let image = null
-    if (watch.image) {
-        image = useMemo(() => fileService.dataUrlToFileObject(watch.image, "watch"), [watch.image])
-    }
+    const image = useMemo(() => fileService.dataUrlToFileObject(watch.image, "watch"), [
+        watch.image,
+    ])
 
     const deleteWatch = async () => {
         if (!confirm("Do you really want to delete this watch ?")) return
@@ -35,13 +34,15 @@ export const WatchItem = ({ watch, mode }: PropTypes) => {
         history.push(links.watchCollection())
     }
 
-    const showControls = (
+    const openAccuracyModal = () => {}
+
+    const itemListControls = (
         <Button>
             <Link to={links.watchShow(uuid)}>More info</Link>
         </Button>
     )
 
-    const editControls = (
+    const showControls = (
         <Space>
             <Button type="primary">
                 <Link to={links.watchEdit(uuid)}>Edit</Link>
@@ -55,10 +56,10 @@ export const WatchItem = ({ watch, mode }: PropTypes) => {
 
     const controls = () => {
         switch (mode) {
+            case Mode.ITEM_LIST:
+                return itemListControls
             case Mode.SHOW:
                 return showControls
-            case Mode.EDIT:
-                return editControls
             default:
                 return "ERROR"
         }

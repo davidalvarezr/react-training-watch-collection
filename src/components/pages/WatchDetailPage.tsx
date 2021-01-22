@@ -1,25 +1,15 @@
-import React, { useEffect, useState } from "react"
+import React from "react"
 import { useParams } from "react-router-dom"
 import { WatchItem } from "~/src/components/blocks/WatchItem"
-import { useWatchService } from "~/src/components/hooks/useWatchService"
 import { Mode } from "~/src/types/Mode"
-import { Watch } from "~/src/types/Watch"
+import { useMainSelector } from "~/src/components/contexts/watches/useMainSelector"
 
-function WatchDetailPage() {
-    const watchService = useWatchService()
+const WatchDetailPage: React.FC = () => {
     const { uuid } = useParams()
+    const [getWatch] = useMainSelector()
+    const watch = getWatch(uuid)
 
-    const [watch, setWatch] = useState<Watch>(null)
-
-    useEffect(() => {
-        const fillStateFromStorage = async () => {
-            setWatch(await watchService.getWatch(uuid))
-        }
-
-        fillStateFromStorage()
-    }, [])
-
-    return <div>{watch && <WatchItem watch={watch} mode={Mode.EDIT} />}</div>
+    return <div>{watch && <WatchItem watch={watch} mode={Mode.SHOW} />}</div>
 }
 
 export default WatchDetailPage
