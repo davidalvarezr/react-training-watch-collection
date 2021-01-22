@@ -3,16 +3,39 @@ import { AccuracyModalStep } from "./AccuracyModal"
 import { Button, Col, List, Row } from "antd"
 import { TimeRun, WatchHavingTimeRun } from "~/src/types/Watch"
 import Item from "antd/es/list/Item"
-import { ArrowRightOutlined } from "@ant-design/icons"
+import { ArrowRightOutlined, DeleteOutlined } from "@ant-design/icons"
 
 type PropTypes = {
     watch: WatchHavingTimeRun
-    onAddTimeRun: () => void
+    onCreateTimeRun: () => void
+    onRemoveTimeRun: (title: string) => void
+    onChooseTimeRun: (timeRun: TimeRun) => void
 }
 
-export const accuracyModalChooseTimeRun = ({ watch, onAddTimeRun }: PropTypes) => {
+export const accuracyModalChooseTimeRun = ({
+    watch,
+    onCreateTimeRun,
+    onRemoveTimeRun,
+    onChooseTimeRun,
+}: PropTypes): [string, JSX.Element, JSX.Element] => {
     const renderTimeRuns = (timeRun: TimeRun) => (
-        <Item actions={[<Button key="btn" icon={<ArrowRightOutlined />} />]}>
+        <Item
+            actions={[
+                <Button
+                    danger
+                    key="delete"
+                    type={"primary"}
+                    icon={<DeleteOutlined />}
+                    onClick={() => onRemoveTimeRun(timeRun.title)}
+                />,
+                <Button
+                    key="choose"
+                    type={"primary"}
+                    icon={<ArrowRightOutlined />}
+                    onClick={() => onChooseTimeRun(timeRun)}
+                />,
+            ]}
+        >
             <Item.Meta
                 title={timeRun.title}
                 description={`Time points: ${timeRun.timePoints.join(", ")}`}
@@ -23,10 +46,10 @@ export const accuracyModalChooseTimeRun = ({ watch, onAddTimeRun }: PropTypes) =
     const body = <List dataSource={watch.timeRuns} renderItem={renderTimeRuns} />
 
     const footer = (
-        <Button type={"primary"} onClick={onAddTimeRun}>
+        <Button type={"primary"} onClick={onCreateTimeRun}>
             Add a time run
         </Button>
     )
 
-    return [body, footer]
+    return ["Choose a time run", body, footer]
 }

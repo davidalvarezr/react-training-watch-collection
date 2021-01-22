@@ -1,6 +1,8 @@
-type TimePoint = {
-    realTime: number
-    watchTime: number
+import { Moment } from "moment"
+
+export type TimePoint = {
+    realTime: string
+    watchTime: string
 }
 
 export type TimeRun = {

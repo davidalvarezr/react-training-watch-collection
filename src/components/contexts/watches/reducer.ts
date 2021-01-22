@@ -117,6 +117,21 @@ export const reducer: Reducer = (state, action) => {
             return { ...state, watches }
         }
 
+        case WatchesAction.REMOVE_TIME_RUN: {
+            const { uuid, title } = action.payload
+            const watches = (state.watches as WatchHavingTimeRun[]).map((watch) => {
+                if (watch.uuid === uuid) {
+                    const timeRun: TimeRun = { timePoints: [], title }
+                    return {
+                        ...watch,
+                        timeRuns: watch.timeRuns.filter((aTimeRun) => aTimeRun.title !== title),
+                    }
+                } else return watch
+            })
+            watchService.setWatchList(watches)
+            return { ...state, watches }
+        }
+
         case WatchesAction.UPLOAD:
             return { ...state, uploading: true, uploadError: undefined }
         case WatchesAction.UPLOAD_SUCCESS:
