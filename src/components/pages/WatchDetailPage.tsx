@@ -9,7 +9,11 @@ const WatchDetailPage: React.FC = () => {
     const [getWatch] = useMainSelector()
     const watch = getWatch(uuid)
 
-    return <div>{watch && <WatchItem watch={watch} mode={Mode.SHOW} />}</div>
+    return (
+        <div>
+            <WatchItem watch={watch} mode={Mode.SHOW} />
+        </div>
+    )
 }
 
 export default WatchDetailPage
