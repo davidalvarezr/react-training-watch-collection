@@ -8,6 +8,7 @@ export enum WatchesAction {
     REMOVE_WATCH = "REMOVE_WATCH",
     UPDATE_WATCH = "UPDATE_WATCH",
     CLEAR_LIST = "CLEAR_LIST",
+    CREATE_TIME_RUN = "CREATE_TIME_RUN",
     INITIALIZE = "INITIALIZE",
     INITIALIZE_SUCCESS = "INITIALIZE_SUCCESS",
     INITIALIZE_FAILURE = "INITIALIZE_FAILURE",
@@ -43,6 +44,11 @@ interface UpdateWatch extends Action {
 
 interface ClearList extends Action {
     type: WatchesAction.CLEAR_LIST
+}
+
+interface CreateTimeRun extends Action {
+    type: WatchesAction.CREATE_TIME_RUN
+    payload: { uuid: string; title: string }
 }
 
 interface initialize extends Action {
@@ -95,6 +101,7 @@ export type WatchAction =
     | RemoveWatch
     | UpdateWatch
     | ClearList
+    | CreateTimeRun
     | initialize
     | initializeSuccess
     | initializeFailure

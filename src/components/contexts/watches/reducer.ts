@@ -1,6 +1,6 @@
 import React from "react"
 import { WatchAction, WatchesAction } from "~/src/components/contexts/watches/actions"
-import { Watch } from "~/src/types/Watch"
+import { TimeRun, Watch, WatchHavingTimeRun } from "~/src/types/Watch"
 import { dropboxErrorMapper } from "~/src/services/error-mappers/dropboxErrorMapper"
 import { consoleService, userService, watchService } from "~/src/services/container"
 import { State } from "~/src/components/contexts/watches/state"
@@ -98,6 +98,21 @@ export const reducer: Reducer = (state, action) => {
             const watches: Watch[] = (state.watches as Watch[]).map((aWatch) =>
                 aWatch.uuid === uuid ? { ...watch, uuid } : aWatch
             )
+            watchService.setWatchList(watches)
+            return { ...state, watches }
+        }
+
+        case WatchesAction.CREATE_TIME_RUN: {
+            const { uuid, title } = action.payload
+            const watches = (state.watches as WatchHavingTimeRun[]).map((watch) => {
+                if (watch.uuid === uuid) {
+                    const timeRun: TimeRun = { timePoints: [], title }
+                    return {
+                        ...watch,
+                        timeRuns: watch.timeRuns ? [timeRun, ...watch.timeRuns] : [timeRun],
+                    }
+                } else return watch
+            })
             watchService.setWatchList(watches)
             return { ...state, watches }
         }

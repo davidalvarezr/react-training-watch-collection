@@ -28,7 +28,6 @@ export class WatchWithTimeRuns implements WatchHavingTimeRun {
     image?: string
     timeRuns: TimeRun[]
 
-    // TODO: Make uuid mandatory for the type
     constructor({
         uuid,
         brand,
