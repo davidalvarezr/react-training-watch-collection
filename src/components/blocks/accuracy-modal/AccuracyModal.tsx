@@ -4,8 +4,6 @@ import { TimeRun, WatchHavingTimeRun } from "~/src/types/Watch"
 import { accuracyModalChooseTimeRun } from "~/src/components/blocks/accuracy-modal/accuracyModalChooseTimeRun"
 import { accuracyModalCreateTimeRun } from "~/src/components/blocks/accuracy-modal/accuracyModalCreateTimeRun"
 
-const { Item } = List
-
 export type PropTypes = {
     visible: boolean
     handleCancel: () => void

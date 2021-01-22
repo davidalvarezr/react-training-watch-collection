@@ -38,6 +38,10 @@ export const WatchItem: React.FC<PropTypes> = ({ watch, mode }: PropTypes) => {
         history.push(links.watchCollection())
     }
 
+    const editWatch = () => {
+        history.push(links.watchEdit(uuid))
+    }
+
     const [isModalVisible, setModalVisible] = useState(false)
     const openAccuracyModal = () => {
         setModalVisible(true)
@@ -51,9 +55,12 @@ export const WatchItem: React.FC<PropTypes> = ({ watch, mode }: PropTypes) => {
 
     const showControls = (
         <Space>
-            <ButtonWithTooltip tooltip={"Edit"} type="primary" icon={<EditOutlined />}>
-                <Link to={links.watchEdit(uuid)}>{/*Edit*/}</Link>
-            </ButtonWithTooltip>
+            <ButtonWithTooltip
+                tooltip={"Edit"}
+                type="primary"
+                icon={<EditOutlined />}
+                onClick={editWatch}
+            />
 
             <Button onClick={openAccuracyModal} icon={<FieldTimeOutlined />}>
                 Add accuracy

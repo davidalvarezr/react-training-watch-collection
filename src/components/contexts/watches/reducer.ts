@@ -95,7 +95,7 @@ export const reducer: Reducer = (state, action) => {
 
         case WatchesAction.UPDATE_WATCH: {
             const { uuid, watch } = action.payload
-            const watches: Watch[] = state.watches.map((aWatch) =>
+            const watches: Watch[] = (state.watches as Watch[]).map((aWatch) =>
                 aWatch.uuid === uuid ? { ...watch, uuid } : aWatch
             )
             watchService.setWatchList(watches)

@@ -17,7 +17,7 @@ export type Watch = {
     image?: string
 }
 
-export type WatchHavingTimeRun = Watch & { timeRuns: TimeRun[] }
+export type WatchHavingTimeRun = Watch & { uuid: string; timeRuns: TimeRun[] }
 
 export class WatchWithTimeRuns implements WatchHavingTimeRun {
     uuid: string

@@ -2,7 +2,7 @@ import React, { ReactNode } from "react"
 import { ButtonProps } from "antd/es/button"
 import { Button, Tooltip } from "antd"
 
-type PropTypes = ButtonProps & { tooltip: string; children: ReactNode }
+type PropTypes = ButtonProps & { tooltip: string; children?: ReactNode }
 
 export const ButtonWithTooltip: React.FC<PropTypes> = (props: PropTypes) => {
     const { tooltip, children, ...restProps } = props
