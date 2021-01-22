@@ -1,6 +1,6 @@
-import React, { CSSProperties, useContext, useMemo } from "react"
-import { Watch } from "~/src/types/Watch"
-import { Button, Card, Space, Tooltip } from "antd"
+import React, { CSSProperties, useContext, useMemo, useState } from "react"
+import { Watch, WatchWithTimeRuns } from "~/src/types/Watch"
+import { Button, Card, Space } from "antd"
 import { Link, useHistory } from "react-router-dom"
 import { links } from "~/src/config/links"
 import { Mode } from "~/src/types/Mode"
@@ -10,6 +10,7 @@ import { MainContext } from "~/src/components/contexts/watches/MainContext"
 import { WatchesAction } from "~/src/components/contexts/watches/actions"
 import { DeleteOutlined, EditOutlined, FieldTimeOutlined } from "@ant-design/icons"
 import { ButtonWithTooltip } from "~/src/components/blocks/ButtonWithTooltip"
+import { AccuracyModal } from "~/src/components/blocks/accuracy-modal/AccuracyModal"
 
 type PropTypes = {
     watch: Watch
@@ -37,7 +38,10 @@ export const WatchItem: React.FC<PropTypes> = ({ watch, mode }: PropTypes) => {
         history.push(links.watchCollection())
     }
 
-    const openAccuracyModal = () => {}
+    const [isModalVisible, setModalVisible] = useState(false)
+    const openAccuracyModal = () => {
+        setModalVisible(true)
+    }
 
     const itemListControls = (
         <Button>
@@ -87,6 +91,13 @@ export const WatchItem: React.FC<PropTypes> = ({ watch, mode }: PropTypes) => {
             {priceBought !== "" && <p>Bought at: {priceBought}$</p>}
             <ImagePreview file={image} />
             {controls()}
+            {mode === Mode.SHOW && (
+                <AccuracyModal
+                    watch={new WatchWithTimeRuns(watch)}
+                    visible={isModalVisible}
+                    handleCancel={() => setModalVisible(false)}
+                />
+            )}
         </Card>
     )
 }
