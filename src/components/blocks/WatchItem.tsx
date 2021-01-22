@@ -1,6 +1,6 @@
 import React, { CSSProperties, useContext, useMemo } from "react"
 import { Watch } from "~/src/types/Watch"
-import { Button, Card, Space } from "antd"
+import { Button, Card, Space, Tooltip } from "antd"
 import { Link, useHistory } from "react-router-dom"
 import { links } from "~/src/config/links"
 import { Mode } from "~/src/types/Mode"
@@ -8,6 +8,8 @@ import { ImagePreview } from "~/src/components/blocks/ImagePreview"
 import { useFileService } from "~/src/components/hooks/useFileService"
 import { MainContext } from "~/src/components/contexts/watches/MainContext"
 import { WatchesAction } from "~/src/components/contexts/watches/actions"
+import { DeleteOutlined, EditOutlined, FieldTimeOutlined } from "@ant-design/icons"
+import { ButtonWithTooltip } from "~/src/components/blocks/ButtonWithTooltip"
 
 type PropTypes = {
     watch: Watch
@@ -45,13 +47,24 @@ export const WatchItem: React.FC<PropTypes> = ({ watch, mode }: PropTypes) => {
 
     const showControls = (
         <Space>
-            <Button type="primary">
-                <Link to={links.watchEdit(uuid)}>Edit</Link>
+            <ButtonWithTooltip tooltip={"Edit"} type="primary" icon={<EditOutlined />}>
+                <Link to={links.watchEdit(uuid)}>{/*Edit*/}</Link>
+            </ButtonWithTooltip>
+
+            <Button onClick={openAccuracyModal} icon={<FieldTimeOutlined />}>
+                Add accuracy
             </Button>
 
-            <Button type="primary" danger onClick={deleteWatch}>
-                Delete
-            </Button>
+            <ButtonWithTooltip
+                tooltip={"Delete"}
+                type="primary"
+                danger
+                onClick={deleteWatch}
+                icon={<DeleteOutlined />}
+                title={"Delete"}
+            >
+                {/*Delete*/}
+            </ButtonWithTooltip>
         </Space>
     )
 
